@@ -17,8 +17,8 @@ AC_PROG_CC
 AC_PROG_LIBTOOL
 
 # Checks for libraries.
-AC_CHECK_LIB(blas,dcopy_,[LIBS="-lblas ${LIBS}"],[AC_MSG_WARN([blas library must be installed, compilation might fail"]); exit 1;])
-AC_CHECK_LIB(pthread,dcopy_,[LIBS="-lpthread ${LIBS}"],[AC_MSG_WARN([pthread library must be installed, compilation might fail"]); exit 1;])
+#AC_CHECK_LIB(blas,dcopy_,[LIBS="-lblas ${LIBS}"],[AC_MSG_WARN([blas library must be installed, compilation might fail"]); exit 1;])
+#AC_CHECK_LIB(pthread,dcopy_,[LIBS="-lpthread ${LIBS}"],[AC_MSG_WARN([pthread library must be installed, compilation might fail"]); exit 1;])
 
 # Checks for header files.
 AC_HEADER_STDC
