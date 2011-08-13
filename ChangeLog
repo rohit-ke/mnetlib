@@ -1,0 +1,12 @@
+======================================================
+=													 =
+=				mnetlib changelog					 =
+=													 =
+======================================================
+
+Chagelist mnetlib 0.1.0 released 01-02-2010
+=======================
+- Added support for autotools
+- Start using boost libraries for vector and matrix implementation
+- Changed directorie's structure
+- Added factory system

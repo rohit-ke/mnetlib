@@ -1,0 +1,4 @@
+# -*- makefile -*-
+#
+#
+SUBDIRS=src
