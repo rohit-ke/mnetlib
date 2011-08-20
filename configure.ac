@@ -34,5 +34,6 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([ftime sqrt])
 
 AC_CONFIG_FILES([Makefile
-                 src/Makefile])
+				 lib/Makefile
+                 lib/src/Makefile])
 AC_OUTPUT

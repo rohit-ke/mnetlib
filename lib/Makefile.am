@@ -1,4 +1,4 @@
 # -*- makefile -*-
 #
 #
-SUBDIRS=lib
+SUBDIRS=src
