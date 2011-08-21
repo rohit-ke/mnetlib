@@ -35,5 +35,6 @@ AC_CHECK_FUNCS([ftime sqrt])
 
 AC_CONFIG_FILES([Makefile
 				 lib/Makefile
-                 lib/src/Makefile])
+                 lib/src/Makefile
+                 test/Makefile])
 AC_OUTPUT

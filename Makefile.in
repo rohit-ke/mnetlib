@@ -222,7 +222,7 @@ top_srcdir = @top_srcdir@
 # -*- makefile -*-
 #
 #
-SUBDIRS = lib
+SUBDIRS = lib test
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

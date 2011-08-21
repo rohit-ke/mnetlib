@@ -1,0 +1,7 @@
+syntax: glob
+.*
+*.lo
+*.Po
+*.Plo
+.project
+.cproject
