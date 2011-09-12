@@ -27,7 +27,7 @@
 #include <sys/timeb.h>
 #include <sys/resource.h>
 
-#include "Learner.h"
+#include <mnetlib/Learner.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Net netType="ffonlineNet">
+	<Layer idx="1" type="linear" inLine="1" outLine="4"></Layer>
+	<Layer idx="2" type="sigm" inLine="4" outLine="8"></Layer>
+	<Layer idx="3" type="logh" inLine="8" outLine="1"></Layer>
+</Net>

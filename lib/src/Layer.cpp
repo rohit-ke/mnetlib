@@ -36,18 +36,18 @@ namespace Mnetlib
 	
 	Layer::~Layer()
 	{
-		for(int i=0; i<_n;i++)
+		/*for(int i=0; i<_n;i++)
 		{
 			delete vect[i];
-		}
+		}*/
 	}
 		
 	void Layer::forward()
 	{
-		Neuron* aux;
+		NeuronSPtr aux;
 		for(int i=0; i<_n;i++)
 		{
-			aux=(Neuron*)vect[i];
+			aux=vect.at(i);
 			double in=_insin->get_input(i);
 			_outsin->set_out(i,aux->Run(in));
 		}

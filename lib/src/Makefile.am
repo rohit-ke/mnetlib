@@ -1,7 +1,8 @@
 
 
 SUFFIXES	= .cpp .hpp .idl .c .h .f .F .o .moc .cc
-
+CXX = colorgcc
+CPPFLAGS = -j4 -pipe -Wall
 lib_LTLIBRARIES	= libmnetlib.la
 
 libmnetlib_la_SOURCES	= NetLib.cpp Layer.cpp LayerLib.cpp Pattern.cpp NeuronLib.cpp Learner.cpp \

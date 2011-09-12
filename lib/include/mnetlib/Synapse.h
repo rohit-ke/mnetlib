@@ -30,16 +30,18 @@
 #include "doubleMat.h"
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
+#include <boost/shared_ptr.hpp>
 namespace ublas = boost::numeric::ublas; 
 
 
 namespace Mnetlib
 {
 
+
 	class Synapse
 	{
 	public:
-		
+
 		/**
 		 * Costruttore.
 		 * Utilizza due parametri, n ed l. Solitamente n rappresenta il numero di neuroni presenti nel layer,
@@ -82,6 +84,8 @@ namespace Mnetlib
 		
 		virtual void set_example(doubleMat ex){throw new NotImplementedException("set_example");};
 		
+		virtual std::string toString(){throw new NotImplementedException("toString");};
+
 	protected:
 		int _n;
 		int _l;

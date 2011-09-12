@@ -57,10 +57,11 @@ namespace Mnetlib
 		{
 			_netRegistry[factory->name()]=factory;
 		}
-		Neuron* getNewNeuron(const std::string& name);
-		Synapse* getNewSynapse(const std::string& name, const int n, const int l);
-		Layer* getNewLayer (const std::string& lName, const std::string& nName, const int n);
+		NeuronSPtr getNewNeuron(const std::string& name);
+		SynapseSPtr getNewSynapse(const std::string& name, const int n, const int l);
+		LayerSPtr getNewLayer (const std::string& lName, const std::string& nName, const int n);
 		Net* getNewNet(const std::string& name,const int ni, const int nh, const int no);
+		Net* getNewNet(const std::string& path);
 	protected:
 			std::map<std::string, NeuronClassFactory*> _neuronRegistry;
 			std::map<std::string, SynapseClassFactory*> _synapseRegistry;

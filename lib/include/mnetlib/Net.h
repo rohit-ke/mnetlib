@@ -34,7 +34,9 @@
 #include "Exception.h"
 
 namespace Mnetlib{
-	
+
+  typedef boost::shared_ptr<Layer> LayerSPtr;
+  typedef boost::shared_ptr<Synapse> SynapseSPtr;
 	class Net
 	{
 	public:
@@ -81,12 +83,14 @@ namespace Mnetlib{
 		
 		double getRMSE(){return _rmse;};
 		
-		void setLayer(vector<Layer*> l){_layer=l;};
+		void setLayer(vector<LayerSPtr> l){_layer=l;};
 		
-		void setSynapse(vector<Synapse*> s){_synapse=s;};
+		void setSynapse(vector<SynapseSPtr> s){_synapse=s;};
+
+		virtual std::string toString(){throw new NotImplementedException("toString");};
 	protected:
-		vector<Layer*> _layer;
-		vector<Synapse*> _synapse;
+		vector<LayerSPtr> _layer;
+		vector<SynapseSPtr> _synapse;
 		double _global_error;
 		double _rmse;
 		double _learning_rate;

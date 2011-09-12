@@ -29,30 +29,32 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-namespace Mnetlib{
-	
-	class doubleMat{
-public:
-		doubleMat();
-		doubleMat(const doubleMat& m);
-		doubleMat(int n, int m);
-		doubleMat(int n);
-		~doubleMat();
-		
-		const doubleMat& operator=(const doubleMat& m);
-		double* getData(){return _data;};
-		
-		double& operator() (int row, int col);
-		double  operator() (int row, int col) const;
-		
-		double& operator() (int row);
-		double  operator() (int row) const;
-private:
-		double* _data;
-		int _row, _col;
-		
-		
-	};
+namespace Mnetlib
+{
+
+  class doubleMat
+  {
+  public:
+    doubleMat();
+    doubleMat(const doubleMat& m);
+    doubleMat(int n, int m);
+    doubleMat(int n);
+    ~doubleMat();
+
+    const doubleMat& operator=(const doubleMat& m);
+    double* getData(){return _data;};
+
+    double& operator() (int row, int col);
+    double  operator() (int row, int col) const;
+
+    double& operator() (int row);
+    double  operator() (int row) const;
+  private:
+    double* _data;
+    int _row, _col;
+
+
+  };
 
 }
 

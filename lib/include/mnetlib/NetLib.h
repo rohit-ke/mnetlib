@@ -49,6 +49,8 @@ namespace Mnetlib
 		doubleMat getNetOut();
 		
 		void setPattern(doubleMat inp, doubleMat ex, int lenght, int out);
+
+		std::string toString();
 	
 	private:
 	

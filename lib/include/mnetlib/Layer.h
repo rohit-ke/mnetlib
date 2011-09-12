@@ -32,10 +32,13 @@
 #include "Neuron.h"
 #include "Exception.h"
 #include "Synapse.h"
+#include <boost/shared_ptr.hpp>
+
 namespace Mnetlib
 {
 	
-	
+typedef boost::shared_ptr<Neuron> NeuronSPtr;
+typedef boost::shared_ptr<Synapse> SynapseSPtr;
 	class Layer
 	{
 	public:
@@ -60,15 +63,17 @@ namespace Mnetlib
 		 * @param insin Sinapsi in ingresso.
 		 * @param outsin Sinapsi in uscita.
 		 */
-		void connectLayer(Synapse* insin,Synapse* outsin){_insin=insin; _outsin=outsin;};
+		void connectLayer(SynapseSPtr insin,SynapseSPtr outsin){_insin=insin; _outsin=outsin;};
 		
-		void setVector(vector<Neuron*> v){vect=v;};				
+		void setVector(vector<NeuronSPtr> v){vect=v;};
+
+		virtual std::string toString(){throw new NotImplementedException("to_string");};
 	
 	protected:
-		std::vector<Neuron*> vect;
+		std::vector<NeuronSPtr> vect;
 		int _n;
-		Synapse* _insin;
-		Synapse* _outsin;
+		SynapseSPtr _insin;
+		SynapseSPtr _outsin;
 
 	};
 }

@@ -28,29 +28,38 @@
 #define NEURONLIB_H_
 
 #include "Neuron.h"
-
+#include <boost/shared_ptr.hpp>
 #include <string>
+
 namespace Mnetlib
 {
+
+
 class LinearNeuron: public Neuron
 {
 public:
-	~LinearNeuron(){};
+
 	double Run(double arg);
 	double RunBack(double o,double e);
 	static LinearNeuron* create(){ return new LinearNeuron();};
 	static std::string name(){ return "linear";} ;	
+private:
+	virtual ~LinearNeuron(){};
 };
 
 class SigmoidNeuron: public Neuron
 {
 public:
-	~SigmoidNeuron(){};
 	double Run(double arg);
 	double RunBack(double o,double e);
 	static SigmoidNeuron* create(){ return new SigmoidNeuron();};
-	static std::string name(){ return "sigmoid";} ;			
+	static std::string name(){ return "sigmoid";} ;
+private:
+	virtual ~SigmoidNeuron(){};
 };
+typedef boost::shared_ptr<Neuron> NeuronSPtr;
+typedef boost::shared_ptr<SigmoidNeuron> SigmoidNeuronSPtr;
+  typedef boost::shared_ptr<LinearNeuron> LinearNeuronSPtr;
 
 }
 #endif /*NEURONLIB_H_*/

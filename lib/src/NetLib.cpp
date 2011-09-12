@@ -33,14 +33,14 @@ namespace Mnetlib
 	
 	FFOnLineBackNet::~FFOnLineBackNet()
 	{
-		for (unsigned int n = 0; n < _synapse.size(); ++n) 
+		/*for (unsigned int n = 0; n < _synapse.size(); ++n)
 		{
 			delete (_synapse[n]);
 		}
 		for (unsigned int i = 0; i < _layer.size(); ++i)
 		 {
 			delete (_layer[i]);
-		}
+		}*/
 	}
 	
 	void FFOnLineBackNet::set_index(int i)
@@ -143,4 +143,19 @@ namespace Mnetlib
 		_out=out;
 	}
 	
+	std::string FFOnLineBackNet::toString()
+	{
+	  std::string ret;
+	  ret.append(this->name());
+	  ret.append("\n");
+	  for (unsigned int n = 0; n < _synapse.size(); ++n)
+	    {
+	      ret.append((_synapse[n])->toString());
+	    }
+	  for (unsigned int i = 0; i < _layer.size(); ++i)
+	    {
+	      ret.append((_layer[i])->toString());
+	    }
+	  return ret;
+	}
 }
