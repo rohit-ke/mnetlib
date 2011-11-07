@@ -26,12 +26,17 @@
 
 #include "Registry.h"
 #include "Synapse.h"
+#include "CommonXMLNetConstant.h"
+#include "CommonMacro.h"
 #include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/sax/HandlerBase.hpp>
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
+#include <boost/shared_ptr.hpp>
+
+
 
 using namespace xercesc;
 
@@ -41,6 +46,8 @@ namespace Mnetlib
   {
     registerNeuronFactory(&linearFactory);
     registerNeuronFactory(&sigmoidFactory);
+    registerNeuronFactory(&logarithmicFactory);
+    registerNeuronFactory(&tanhFactory);
     registerLayerFactory(&inputFactory);
     registerLayerFactory(&hiddenFactory);
     registerLayerFactory(&outputFactory);
@@ -48,6 +55,13 @@ namespace Mnetlib
     registerSynapseFactory(&hiddensinFactory);
     registerSynapseFactory(&outsinFactory);
     registerNetFactory(&ffonlineFactory);
+    _nodeDecoderMap.insert(std::make_pair(kNetNodeName, &Registry::decodeNetNode));
+    _nodeDecoderMap.insert(std::make_pair(kLayerNodeName, &Registry::decodeLayerNode));
+    _nodeDecoderMap.insert(std::make_pair(kInputLayerNodeName, &Registry::decodeInputLayerNode));
+    _nodeDecoderMap.insert(std::make_pair(kOutputLayerNodeName, &Registry::decodeOutputLayerNode));
+    _nodeDecoderMap.insert(std::make_pair(kSynapseNodeName, &Registry::decodeSynapseNode));
+    _nodeDecoderMap.insert(std::make_pair(kInputSynapseNodeName, &Registry::decodeInputSynapseNode));
+    _nodeDecoderMap.insert(std::make_pair(kOutputSynapseNodeName, &Registry::decodeOutputSynapseNode));
   }
 
   Registry::~Registry()
@@ -80,6 +94,10 @@ namespace Mnetlib
                 v.push_back(getNewNeuron(nName));
               }
             oLayerSPtr->setVector(v);
+          }
+        else
+          {
+              throw new Mnetlib::InstantiationException("Wrong layer type");
           }
       }
     return oLayerSPtr;
@@ -126,14 +144,131 @@ namespace Mnetlib
     return 0;
   }
 
+  void Registry::decodeNetNode(DOMNode* ioNode)
+  {
+    DEBUG_MSG( "decodenet");
+    DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+    DEBUG_MSG( "Found Net Node");
+    DOMElement* aNetNode = dynamic_cast<DOMElement*>(ioNode);
+    const XMLCh* fNodeType = aNetNode->getAttribute(kNetTypeKey);
+    std::string aNetType=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Net type: " << aNetType );
+    if ( _netRegistry[aNetType] )
+      {
+        DEBUG_MSG( "valid net type");
+        _net=_netRegistry[aNetType]->create();
+      }
+  }
+
+  void Registry::decodeLayerNode(DOMNode* ioNode)
+  {
+    DEBUG_MSG( "decodelayer");
+    DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+    DEBUG_MSG( "Found Layer Node");
+    DOMElement* aLayerNode = dynamic_cast<DOMElement*>(ioNode);
+    const XMLCh* fNodeType = aLayerNode->getAttribute(kLayerTypeKey);
+    std::string aLayerType=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer type: " << aLayerType );
+    fNodeType = aLayerNode->getAttribute(kLayerNeuronNumKey);
+    std::string aLayerNeruon=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer neuron: " << aLayerNeruon );
+    fNodeType = aLayerNode->getAttribute(kLayerIndKey);
+    std::string aLayerInd=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer ind: " << aLayerInd );
+    LayerSPtr aLayer=getNewLayer("hiddenLayer",aLayerType,atoi(aLayerNeruon.c_str()));
+    _net->pushLayer(aLayer);
+    //_net->setLayer();
+  }
+
+  void Registry::decodeInputLayerNode(DOMNode* ioNode)
+  {
+    DEBUG_MSG( "decodeinputlayer");
+    DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+    DEBUG_MSG( "decodelayer");
+    DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+    DEBUG_MSG( "Found Layer Node");
+    DOMElement* aLayerNode = dynamic_cast<DOMElement*>(ioNode);
+    const XMLCh* fNodeType = aLayerNode->getAttribute(kLayerTypeKey);
+    std::string aLayerType=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer type: " << aLayerType);
+    fNodeType = aLayerNode->getAttribute(kLayerNeuronNumKey);
+    std::string aLayerNeruon=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer neuron: " << aLayerNeruon );
+    fNodeType = aLayerNode->getAttribute(kLayerIndKey);
+    std::string aLayerInd=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer ind: " << aLayerInd );
+    LayerSPtr aLayer=getNewLayer("inputLayer",aLayerType,atoi(aLayerNeruon.c_str()));
+    _net->pushLayer(aLayer);
+  }
+
+  void Registry::decodeOutputLayerNode(DOMNode* ioNode)
+  {
+    DEBUG_MSG( "decodeoutputlayer");
+    DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+    DEBUG_MSG( "Found Layer Node");
+    DOMElement* aLayerNode = dynamic_cast<DOMElement*>(ioNode);
+    const XMLCh* fNodeType = aLayerNode->getAttribute(kLayerTypeKey);
+    std::string aLayerType=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer type: " << aLayerType );
+    fNodeType = aLayerNode->getAttribute(kLayerNeuronNumKey);
+    std::string aLayerNeruon=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer neuron: " << aLayerNeruon );
+    fNodeType = aLayerNode->getAttribute(kLayerIndKey);
+    std::string aLayerInd=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer ind: " << aLayerInd );
+    LayerSPtr aLayer=getNewLayer("outputLayer",aLayerType,atoi(aLayerNeruon.c_str()));
+    _net->pushLayer(aLayer);
+  }
+
+  void Registry::decodeSynapseNode(DOMNode* ioNode)
+  {
+    DEBUG_MSG( "decodeSynapseNode");
+    DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+    DOMElement* aSynapseNode = dynamic_cast<DOMElement*>(ioNode);
+    const XMLCh* fNodeType = aSynapseNode->getAttribute(kLayerInLineKey);
+    std::string aSynapseInLine=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer type: " << aSynapseInLine );
+    fNodeType = aSynapseNode->getAttribute(kLayerOutLineKey);
+    std::string aSynapseOutLine=XMLString::transcode(fNodeType);
+    DEBUG_MSG( "Layer neuron: " << aSynapseOutLine );
+    SynapseSPtr aSynapse=getNewSynapse("hiddenSynapse",atoi(aSynapseInLine.c_str()),atoi(aSynapseOutLine.c_str()));
+    _net->pushSynapse(aSynapse);
+  }
+
+  void Registry::decodeInputSynapseNode(DOMNode* ioNode)
+    {
+      DEBUG_MSG( "decodeInputSynapseNode");
+      DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+      DOMElement* aSynapseNode = dynamic_cast<DOMElement*>(ioNode);
+      const XMLCh* fNodeType = aSynapseNode->getAttribute(kLayerInLineKey);
+      std::string aSynapseInLine=XMLString::transcode(fNodeType);
+      DEBUG_MSG( "Synapse in: " << aSynapseInLine );
+      fNodeType = aSynapseNode->getAttribute(kLayerOutLineKey);
+      std::string aSynapseOutLine=XMLString::transcode(fNodeType);
+      DEBUG_MSG( "Synapse out: " << aSynapseOutLine );
+      SynapseSPtr aSynapse=getNewSynapse("inputSynapse",atoi(aSynapseInLine.c_str()),atoi(aSynapseOutLine.c_str()));
+      _net->pushSynapse(aSynapse);
+    }
+
+  void Registry::decodeOutputSynapseNode(DOMNode* ioNode)
+    {
+      DEBUG_MSG( "decodeOutputSynapseNode");
+      DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
+      DOMElement* aSynapseNode = dynamic_cast<DOMElement*>(ioNode);
+      const XMLCh* fNodeType = aSynapseNode->getAttribute(kLayerInLineKey);
+      std::string aSynapseInLine=XMLString::transcode(fNodeType);
+      DEBUG_MSG( "Synapse in: " << aSynapseInLine);
+      fNodeType = aSynapseNode->getAttribute(kLayerOutLineKey);
+      std::string aSynapseOutLine=XMLString::transcode(fNodeType);
+      DEBUG_MSG( "Synapse out: " << aSynapseOutLine);
+      SynapseSPtr aSynapse=getNewSynapse("outputSynapse",atoi(aSynapseInLine.c_str()),atoi(aSynapseOutLine.c_str()));
+      _net->pushSynapse(aSynapse);
+    }
+
   Net* Registry::getNewNet(const std::string& path)
   {
     //Open file
-
-    //Parse
-
-    //Create net
-    cout << "getNewNet from xml file \n";
+    INFO_MSG( "getNewNet from xml file");
     try {
         XMLPlatformUtils::Initialize();
     }
@@ -145,9 +280,8 @@ namespace Mnetlib
         return 0;
     }
 
+    //Parse
     XercesDOMParser* parser = new XercesDOMParser();
-    //parser->setValidationScheme(XercesDOMParser::Val_Always);
-    //parser->setDoNamespaces(true);    // optional
 
     ErrorHandler* errHandler = (ErrorHandler*) new HandlerBase();
     parser->setErrorHandler(errHandler);
@@ -176,188 +310,38 @@ namespace Mnetlib
         XMLString::release(&message);
         return 0;
     }
-    catch (std::exception e) {
-        cout << "Unexpected Exception \n" ;
-        cout << e.what();
+    catch (std::exception& e) {
+        DEBUG_MSG( "Unexpected Exception " );
+        DEBUG_MSG( e.what());
         return 0;
     }
 
-    //static const XMLCh* kNetTypeKey;
-    //XMLString::transcode("NetType",kNetTypeKey,99);
-    static   const XMLCh kNetNodeName[] =
-        {
-            chLatin_N,
-            chLatin_e,
-            chLatin_t,
-            chNull
-        };
-
-    static   const XMLCh kLayerNodeName[] =
-        {
-            chLatin_L,
-            chLatin_a,
-            chLatin_y,
-            chLatin_e,
-            chLatin_r,
-            chNull
-        };
-
-    static   const XMLCh kNetTypeKey[] =
-        {
-            chLatin_n,
-            chLatin_e,
-            chLatin_t,
-            chLatin_T,
-            chLatin_y,
-            chLatin_p,
-            chLatin_e,
-            chNull
-        };
-
-    static const XMLCh kLayerIndKey[] =
-        {
-            chLatin_i,
-            chLatin_n,
-            chLatin_d,
-            chNull
-        };
-    static const XMLCh kLayerTypeKey[] =
-        {
-            chLatin_t,
-            chLatin_y,
-            chLatin_p,
-            chLatin_e,
-            chNull
-        };
-
-    static const XMLCh kLayerInLineKey[] =
-        {
-            chLatin_i,
-            chLatin_n,
-            chLatin_L,
-            chLatin_i,
-            chLatin_n,
-            chLatin_e,
-            chNull
-        };
-
-    static const XMLCh kLayerOutLineKey[] =
-        {
-            chLatin_o,
-            chLatin_u,
-            chLatin_t,
-            chLatin_L,
-            chLatin_i,
-            chLatin_n,
-            chLatin_e,
-            chNull
-        };
-
-        std::string aNodeValue, aNetType,aLayerType;
-
-    DOMDocument* pDoc = parser->getDocument();
+    std::string aNodeValue, aNetType,aLayerType;
+    DOMDocument* pDoc=parser->getDocument();
     DOMNode* pCurrent = NULL;
-    DOMElement *pRoot = pDoc->getDocumentElement();
-
+    DOMElement* pRoot=pDoc->getDocumentElement();
+    Net* net;
 
     // create an iterator to visit all text nodes.
-    DOMNodeIterator* iterator = pDoc->createNodeIterator(pRoot,
+    DOMNodeIterator* iterator=pDoc->createNodeIterator(pRoot,
         DOMNodeFilter::SHOW_ALL, NULL, true);
 
+    //Create net
     pCurrent = iterator->nextNode();
-    if(XMLString::equals(pCurrent->getNodeName(),kNetNodeName))
+    while (pCurrent!=NULL)
       {
-        cout << "Found Net Node\n";
-        int ni,nh,no;
-        ni=no=nh=2;
-        DOMElement* aNetNode = dynamic_cast<DOMElement*>(pCurrent);
-        const XMLCh* fNodeType = aNetNode->getAttribute(kNetTypeKey);
-        aNetType=XMLString::transcode(fNodeType);
-        cout << "Net type: " << aNetType << "\n";
-        if ( _netRegistry[aNetType] )
+        decode_map::const_iterator aNodeDecoderIt = _nodeDecoderMap.find(pCurrent->getNodeName());
+        if(aNodeDecoderIt!=_nodeDecoderMap.end())
           {
-            cout << "valid net type\n";
-            Net* net=_netRegistry[aNetType]->create();
-            vector<SynapseSPtr> vs;
-            vector<LayerSPtr> vl;
-            for ( pCurrent = iterator->nextNode(); pCurrent != 0; pCurrent = iterator->nextNode() )
-              {
-                cout << "Actual node name: " << XMLString::transcode(pCurrent->getNodeName()) <<"\n";
-                int aInLine, aOutLine;
-                string aTmpString;
-                SynapseSPtr s1,s2;
-                LayerSPtr l1,l2;
-                if(XMLString::equals(pCurrent->getNodeName(),kLayerNodeName))
-                  {
-                    DOMElement* aLayerNode = dynamic_cast<DOMElement*>(pCurrent);
-                    cout << "Found Layer Node\n";
-                    fNodeType = aLayerNode->getAttribute(kLayerTypeKey);
-                    aLayerType=XMLString::transcode(fNodeType);
-                    cout << "attribute :" << aLayerType << "\n";
-                    fNodeType = aLayerNode->getAttribute(kLayerInLineKey);
-                    aTmpString =XMLString::transcode(fNodeType);
-                    cout << "attribute :" << aTmpString << "\n";
-                    aInLine=atoi(aTmpString.c_str());
-                    fNodeType = aLayerNode->getAttribute(kLayerOutLineKey);
-                    aTmpString =XMLString::transcode(fNodeType);
-                    cout << "attribute :" << aTmpString << "\n";
-                    aOutLine=atoi(aTmpString.c_str());
-                    cout << "Layer properties: \n";
-                    cout << "Layer type: " << aLayerType <<"\n";
-                    cout << "Input line: " << aInLine << "\n";
-                    cout << "Output line: " << aOutLine << "\n";
-
-                    if(vl.size()==0)
-                      {
-                        s1=getNewSynapse("inputSynapse",aOutLine,aInLine);
-                        l1=getNewLayer("inputLayer",aLayerType,aOutLine);
-                        vl.push_back(l1);
-                        vs.push_back(s1);
-                      }
-                    else
-                      {
-                        l1=vl.back();
-                        s1=vs.back();
-                        s2=getNewSynapse("hiddenSynapse",aOutLine,aInLine);
-                        l2=getNewLayer("hiddenLayer",aLayerType,aOutLine);
-                        l1->connectLayer(s1,s2);
-                        vl.push_back(l2);
-                        vs.push_back(s2);
-                      }
-
-                    s2=getNewSynapse("outputSynapse",no,1);
-                    /*SynapseSPtr s1=getNewSynapse("inputSynapse",ni,1);
-                    SynapseSPtr s2=getNewSynapse("hiddenSynapse",nh,ni);
-                    LayerSPtr l=getNewLayer("inputLayer","linear",ni);
-                    l->connectLayer(s1,s2);
-                    vl.push_back(l);
-                    vs.push_back(s1);
-                    s1=getNewSynapse("hiddenSynapse",no,nh);
-                    l=getNewLayer("hiddenLayer","linear",nh);
-                    l->connectLayer(s2,s1);
-                    vl.push_back(l);
-                    vs.push_back(s2);
-
-                    l=getNewLayer("outputLayer","linear",no);
-                    l->connectLayer(s1,s2);
-                    vl.push_back(l);
-                    vs.push_back(s1);
-                    vs.push_back(s2);*/
-                  }
-
-              }
-            net->setLayer(vl);
-            net->setSynapse(vs);
-            cout << "dumping net content\n";
-            cout<< net->toString();
-            cout<< "\n";
-            return net;
+            (this->*(aNodeDecoderIt->second))(pCurrent);
           }
-        else
-          {
-            throw InstantiationException();
-          }
+         pCurrent = iterator->nextNode();
       }
+    //Connect Layer and Synapse
+    _net->connect();
+    DEBUG_MSG( "dumping net content");
+    DEBUG_MSG(_net->toString());
+    return _net;
     delete parser;
     delete errHandler;
     return 0;

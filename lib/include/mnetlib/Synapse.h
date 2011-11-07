@@ -50,7 +50,7 @@ namespace Mnetlib
 		 * @param n Numero di neuroni a cui e' collegata la sinapsi.
 		 * @param l Numero di linee d'ingresso.
 		 */
-		Synapse(int n, int l){_n=n; _l=l; _index=0;};
+		Synapse(int iIn, int iOut){_in=iIn; _out=iOut; _index=0;};
 		
 		
 		virtual ~Synapse(){};
@@ -87,8 +87,8 @@ namespace Mnetlib
 		virtual std::string toString(){throw new NotImplementedException("toString");};
 
 	protected:
-		int _n;
-		int _l;
+		int _out;
+		int _in;
 		int _index;
 	};
 }

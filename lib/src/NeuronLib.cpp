@@ -70,7 +70,28 @@ namespace Mnetlib
 		return ret;
 	}
 
-/*	double TanhNeuron::Run(double arg)
+	double LogarithmNeuron::Run(double arg)
+	{
+
+	  _input=arg;
+
+	  _outvalue= tanh(_input);
+
+	  return _outvalue;
+	}
+
+	double LogarithmNeuron::RunBack(double o,double e)
+	{
+	  double err=e;
+	  double out=o;
+	  double ret=0;
+
+	  ret=(1+out)*(1-out)*err;
+
+	  return ret;
+	}
+
+	double TanhNeuron::Run(double arg)
 	{
 		
 		_input=arg;
@@ -86,9 +107,9 @@ namespace Mnetlib
 		double out=o;
 		double ret=0;
 		
-		ret=(1+out)*(1-out)*err;
+		ret=(1-tanh(out)*tanh(out))*err;
 			
 		return ret;
-	}*/
+	}
 }
 

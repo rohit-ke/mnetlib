@@ -33,9 +33,14 @@ namespace Mnetlib
 {
 	class InstantiationException: public exception
 	{
+	public:
+	  const char* error;
+	  InstantiationException(const char* arg) : error(arg){}
 	  virtual const char* what() const throw()
 	  {
-		return "You have wrong instantiate class. Look at registry usage";
+	    std::string aError(error);
+	    aError = "You have wrong instantiate class. Look at registry usage\n" + aError;
+	    return aError.c_str();
 	  }
 	};
 	
@@ -50,6 +55,8 @@ namespace Mnetlib
 			return error;
 	  }
 	};
+
+
 }
 
 #endif

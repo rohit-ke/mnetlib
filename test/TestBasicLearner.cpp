@@ -5,6 +5,10 @@
  *      Author: totoro
  */
 
+#define DEBUG
+
+
+#include <mnetlib/CommonMacro.h>
 
 #include <sys/time.h>
 #include <sys/timeb.h>
@@ -14,10 +18,11 @@
 #include <xercesc/util/XMLString.hpp>
 #include <xercesc/util/PlatformUtils.hpp>
 
-#include "mnetlib/Registry.h"
+#include <mnetlib/Registry.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <mnetlib/Learner.h>
 
 #include <iostream>
 #include <string>
@@ -53,6 +58,14 @@ int main(){
 
               Registry reg;
               Net* net=reg.getNewNet("/home/totoro/workspace/mnetlib1/test/data/TestBasicLearner.xml");
+              Learner* l=new Learner();
+              l->buildTrainPattern("/home/totoro/workspace/mnetlib1/test/data/building.train");
+              l->buildTestPattern("/home/totoro/workspace/mnetlib1/test/data/building.test");
+              //Setto parametri: learning rate, momento, numero cicli, Hidden Min (neuroni interni), Hidden Max, numero thread
+              l->set_parameter(0.15,0.4,150,4,10,2);
+
+              l->trainNet(net);
+
 //              //f->trainI.putvalue();
 //              //train net
 //              net->setPattern(f->trainI,f->trainO,f->trainLng,f->trainNo);
@@ -70,8 +83,8 @@ int main(){
 //              cout<<"RMSE--> "<< mse<<" con nodi: "<< f->n <<"\n";
 //              delete net;
         }catch (exception* e) { cout << e->what()<<"\n"; }
-        catch (std::exception e) {
-                cout << "Unexpected Exception \n" ;
+        catch (std::exception& e) {
+                cout << "Unexpected Exception during test \n" ;
                 cout<< e.what();
                 return 0;
             }

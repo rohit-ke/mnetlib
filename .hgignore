@@ -1,7 +1,9 @@
 syntax: glob
 .*
 *.lo
+*.o
 *.Po
 *.Plo
 .project
 .cproject
+Debug/*

@@ -23,7 +23,9 @@
 *
 */
 //TODO Aggiungere supporto mpi mp pthread
+#define DEBUG
 #include "Learner.h"
+#include "CommonMacro.h"
 
 namespace Mnetlib{
 	
@@ -61,6 +63,31 @@ namespace Mnetlib{
 		return 0;
 	}
 	
+	void Learner::trainNet(Net* ioNet)
+	{
+	  try{
+	      INFO_MSG("Starting net train");
+	      //f->trainI.putvalue();
+	      //train net
+	      DEBUG_MSG("Setting pattern");
+	      ioNet->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,testNcO);
+	      DEBUG_MSG("Setting net parameter");
+	      ioNet->set_parameter(learning_rate,momentum,train_cicles);
+	      ioNet->trainNet();
+	      //test net
+	      ioNet->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,trainNcO);
+	      ioNet->testNet();
+	      double ret=ioNet->getGlobalError();
+	      double mse=ioNet->getRMSE();
+	      //Salvo nella struttura dati l'errore globale della rete appena creata
+	      INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
+	      INFO_MSG("Testing Dataset: RMSE--> "<< mse);
+
+	  }
+	  catch (std::exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
+	  catch (exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
+	}
+
 	int Learner::findBestNet()
 	{
 	

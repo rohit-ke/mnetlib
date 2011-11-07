@@ -78,14 +78,20 @@ namespace Mnetlib{
 		 * Setta i pattern d'ingresso e gli esempi in uscita necessari per la fase d'apprendimento.
 		 */
 		virtual void setPattern(doubleMat inp, doubleMat ex, int lenght, int out){throw new NotImplementedException("setPattern");};
+
+		virtual void connect() const=0 ;
 		
 		double getGlobalError(){return _global_error;};
 		
 		double getRMSE(){return _rmse;};
 		
-		void setLayer(vector<LayerSPtr> l){_layer=l;};
+		void setLayer(vector<LayerSPtr>& l){_layer=l;};
 		
-		void setSynapse(vector<SynapseSPtr> s){_synapse=s;};
+		void setSynapse(vector<SynapseSPtr>& s){_synapse=s;};
+
+		void pushLayer(LayerSPtr& l){_layer.push_back(l);};
+
+		void pushSynapse(SynapseSPtr& s){_synapse.push_back(s);};
 
 		virtual std::string toString(){throw new NotImplementedException("toString");};
 	protected:

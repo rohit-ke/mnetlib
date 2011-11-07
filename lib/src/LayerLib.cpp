@@ -23,8 +23,11 @@
  *
  */
 
+//#define DEBUG
+
 #include "LayerLib.h"
 #include <boost/lexical_cast.hpp>
+#include "CommonMacro.h"
 
 namespace Mnetlib
 {
@@ -35,6 +38,8 @@ namespace Mnetlib
 
   void OutputLayer::backprop()
   {
+    DEBUG_MSG("OutputLayer - backprop funct");
+    DEBUG_MSG("backprop - neuron vect size: " << vect.size() << " max index: " <<_n);
     for(int i=0; i<_n;i++)
       {
         NeuronSPtr aux;
@@ -48,6 +53,8 @@ namespace Mnetlib
 
   void HiddenLayer::backprop()
   {
+    DEBUG_MSG("HiddenLayer - backprop funct");
+    DEBUG_MSG("backprop - neuron vect size: " << vect.size() << " max index: " <<_n);
     for(int i=0; i<_n;i++)
       {
         NeuronSPtr aux;

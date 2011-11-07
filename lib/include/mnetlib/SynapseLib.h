@@ -36,7 +36,7 @@ namespace Mnetlib
   class InputSynapse: public Synapse
   {
   public:
-    InputSynapse(int n, int l);
+    InputSynapse(int iIn, int iOut);
 
     virtual ~InputSynapse();
 
@@ -65,7 +65,7 @@ namespace Mnetlib
   class OutputSynapse: public Synapse
   {
   public:
-    OutputSynapse(int n, int l);
+    OutputSynapse(int iIn, int iOut);
 
     virtual ~OutputSynapse();
 
@@ -99,7 +99,7 @@ namespace Mnetlib
   class HiddenSynapse: public Synapse
   {
   public:
-    HiddenSynapse(int n, int l);
+    HiddenSynapse(int iIn, int iOut);
 
     virtual ~HiddenSynapse();
 
@@ -123,14 +123,14 @@ namespace Mnetlib
 
     void adjuste_weight(double rate, int cicle, double momentum);
 
-    ublas::matrix<double> get_weight(){return weight;};
+    ublas::matrix<double> get_weight(){return _weight;};
 
-    void set_weight(ublas::matrix<double> w){weight=w;};
+    void set_weight(ublas::matrix<double> w){_weight=w;};
 
     std::string toString();
   protected:
-    ublas::matrix<double> weight,oldweight;
-    ublas::vector<double> in_vect,error,gradient;
+    ublas::matrix<double> _weight,oldweight,_previousDelta;
+    ublas::vector<double> in_vect,error,_gradient;
 
   };
 }

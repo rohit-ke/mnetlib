@@ -36,12 +36,14 @@ namespace Mnetlib
 	public:
 		FFOnLineBackNet();
 		
-		~FFOnLineBackNet();
+		virtual ~FFOnLineBackNet();
 		
 		static FFOnLineBackNet* create(){ return new FFOnLineBackNet();};
 		
 		static std::string name(){ return "ffonlineNet";} ;	
 		
+		virtual void connect() const;
+
 		void trainNet();
 		
 		void testNet();

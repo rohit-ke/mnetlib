@@ -57,9 +57,11 @@ namespace Mnetlib
 		/*Costruisce i pattern d'apprendimento*/
 		void buildTestPattern(string datafile);
 		
-		/*Costruisce la rete*/
+		/*Costruisce la rete e mostra i risultati del train*/
 		static void * trainNet(void * arg);
 		
+                void trainNet(Net* ioNet);
+
 		int findBestNet();
 		
 		/* 

@@ -23,8 +23,11 @@
  *
  */
 
+//#define DEBUG
+
 #include "SynapseLib.h"
 #include <boost/lexical_cast.hpp>
+#include "CommonMacro.h"
 
 //TODO passare da daubleMat a boost:matrix
 //TODO verificare utilizzo indici nell'hidden sinapse
@@ -32,9 +35,9 @@
 namespace Mnetlib
 {
 
-  InputSynapse::InputSynapse(int n, int l):Synapse(n,l),weight(1,n)
+  InputSynapse::InputSynapse(int iIn, int iOut):Synapse(iIn,iOut),weight(iOut,iIn)
   {
-
+    //TODO assert iIn=iOut
   }
 
   InputSynapse::~InputSynapse()
@@ -44,7 +47,7 @@ namespace Mnetlib
 
   void InputSynapse::inizialize_weight()
   {
-    for(int i=0;i<_n;i++)
+    for(int i=0;i<_in;i++)
       {
         weight(1,i)=(double)(1);
       }
@@ -57,9 +60,9 @@ namespace Mnetlib
 
   /*------------------------------*/
 
-  OutputSynapse::OutputSynapse(int n, int l):Synapse(n,l),weight(1,n),in_vect(n),error(n)
+  OutputSynapse::OutputSynapse(int iIn, int iOut):Synapse(iIn,iOut),weight(1,iIn),in_vect(iIn),error(iIn)
   {
-
+    //TODO assert iIn=iOut
   }
 
   OutputSynapse::~OutputSynapse()
@@ -69,7 +72,7 @@ namespace Mnetlib
 
   void OutputSynapse::inizialize_weight()
   {
-    for(int i=0;i<_n;i++)
+    for(int i=0;i<_in;i++)
       {
         weight(1,i)=(double)(1);
       }
@@ -93,7 +96,7 @@ namespace Mnetlib
 
   /*------------------------------*/
 
-  HiddenSynapse::HiddenSynapse(int n, int l):Synapse(n,l),weight(n,l),oldweight(n,l),in_vect(l),error(l),gradient(n)
+  HiddenSynapse::HiddenSynapse(int iIn, int iOut):Synapse(iIn,iOut),_weight(iOut,iIn),oldweight(iOut,iIn),in_vect(iIn),error(iIn),_gradient(iOut)
   {
     inizialize_weight();
 
@@ -107,34 +110,38 @@ namespace Mnetlib
   void HiddenSynapse::inizialize_weight()
   {
 
-    for(int i=0;i<_n;i++)
+    for(int i=0;i<_out;i++)
       {
-        for(int s=0;s<_l;s++)
+        for(int s=0;s<_in;s++)
           {
-            weight(i,s)=((double)(rand())/(double)(RAND_MAX-1))-0.5;
-            if(weight(i,s)>0.5 || weight(i,s)<-0.5)
-              cout<<"Peso sballato: "<<weight(i,s)<<" indice n: "<<i<<" indice l: "<<s<<"\n";
+            _weight(i,s)=((double)(rand())/(double)(RAND_MAX-1))-0.5;
+            if(_weight(i,s)>0.5 || _weight(i,s)<-0.5)
+              cout<<"Peso sballato: "<<_weight(i,s)<<" indice n: "<<i<<" indice l: "<<s<<"\n";
           }
       }
   }
 
   double HiddenSynapse::get_input(int i)
   {
+    DEBUG_MSG("get_input - invect size: " << in_vect.size() << " get param: " <<i);
+    DEBUG_MSG("get_input - weight size: " << _weight.size1() <<"," << _weight.size2()<< " l size: " <<_in);
     double inp=0;
-    for (int j=0;j<_l;j++)
+    for (int j=0;j<_in;j++)
       {
-        inp +=in_vect(j)*weight(i,j);
+        inp +=in_vect(j)*_weight(i,j);
       }
     return inp;
   }
 
   double HiddenSynapse::get_error(int i)
   {
+    DEBUG_MSG("get_error - error size: " << error.size() << " get param: " <<i);
     return error(i);
   }
 
   double HiddenSynapse::get_out(int i)
   {
+    DEBUG_MSG("get_out - invect size: " << in_vect.size() << " get param: " <<i);
     return in_vect(i);
   }
 
@@ -145,28 +152,36 @@ namespace Mnetlib
 
   void HiddenSynapse::set_gradient(int i, double value)
   {
-    gradient(i)=value;
-    double err=0;
-    for (int j=0;j<_n;j++)
+    DEBUG_MSG("set_gradient - gradient size: " << _gradient.size() << " get param: " <<i);
+    DEBUG_MSG("set_gradient - weight size: " << _weight.size1() <<"," << _weight.size2()<< " l size: " <<_in);
+    _gradient(i)=value;
+    //double err=0;
+    for (int j=0;j<_in;j++)
       {
-        err +=gradient(j)*weight(j,i);
+        error(j) +=_gradient(i)*_weight(i,j);
       }
-    error(i)=err;
+    DEBUG_MSG("set_gradient - error size: " << error.size());
+    //error(i)=err;
+    DEBUG_MSG("set_gradient - end");
   }
 
   void HiddenSynapse::adjuste_weight(double rate, int cicle, double momentum)
   {
-    for (int i=0;i<_n;i++)
+    for (int i=0;i<_out;i++)
       {
-        for (int j=0;j<_l;j++)
+        for (int j=0;j<_in;j++)
           {
             if(cicle==0 && _index==0)
-              oldweight(i,j)=weight(i,j);
-            double tmp=weight(i,j);
-            weight(i,j) -=rate*gradient(i)*in_vect(j)-momentum*(tmp-oldweight(i,j));
+              oldweight(i,j)=_weight(i,j);
+            double tmp=_weight(i,j);
+            _weight(i,j) -=rate*_gradient(i)*in_vect(j)-momentum*(tmp-oldweight(i,j));
             oldweight(i,j)=tmp;
 
           }
+      }
+    for (int j=0;j<_in;j++)
+      {
+        error(j)=0;
       }
   }
 
@@ -175,10 +190,10 @@ namespace Mnetlib
     std::string ret; ret.append("Synapse type: ");
     ret.append(this->name());
     ret.append("\n");
-    ret.append(" l: ");
-    ret += boost::lexical_cast<std::string>(this->_l);
-    ret.append(" n:");
-    ret += boost::lexical_cast<std::string>(this->_n);
+    ret.append(" in: ");
+    ret += boost::lexical_cast<std::string>(this->_in);
+    ret.append(" out:");
+    ret += boost::lexical_cast<std::string>(this->_out);
     ret +="\n";
     return ret;
   }
@@ -188,10 +203,10 @@ namespace Mnetlib
     std::string ret; ret.append("Synapse type: ");
     ret.append(this->name());
     ret.append("\n");
-    ret.append(" l: ");
-    ret += boost::lexical_cast<std::string>(this->_l);
-    ret.append(" n:");
-    ret += boost::lexical_cast<std::string>(this->_n);
+    ret.append(" in: ");
+    ret += boost::lexical_cast<std::string>(this->_in);
+    ret.append(" out:");
+    ret += boost::lexical_cast<std::string>(this->_out);
     ret +="\n";
     return ret;
   }
@@ -201,10 +216,10 @@ namespace Mnetlib
     std::string ret; ret.append("Synapse type: ");
     ret.append(this->name());
     ret.append("\n");
-    ret.append(" l: ");
-    ret += boost::lexical_cast<std::string>(this->_l);
-    ret.append(" n:");
-    ret += boost::lexical_cast<std::string>(this->_n);
+    ret.append(" in: ");
+    ret += boost::lexical_cast<std::string>(this->_in);
+    ret.append(" out:");
+    ret += boost::lexical_cast<std::string>(this->_out);
     ret +="\n";
     return ret;
   }
