@@ -58,15 +58,15 @@ private:
 	virtual ~SigmoidNeuron(){};
 };
 
-class LogarithmNeuron: public Neuron
+class LogarithmicNeuron: public Neuron
 {
 public:
         double Run(double arg);
         double RunBack(double o,double e);
-        static LogarithmNeuron* create(){ return new LogarithmNeuron();};
+        static LogarithmicNeuron* create(){ return new LogarithmicNeuron();};
         static std::string name(){ return "logh";} ;
 private:
-        virtual ~LogarithmNeuron(){};
+        virtual ~LogarithmicNeuron(){};
 };
 
 
@@ -84,7 +84,7 @@ private:
 typedef boost::shared_ptr<Neuron> NeuronSPtr;
 typedef boost::shared_ptr<SigmoidNeuron> SigmoidNeuronSPtr;
 typedef boost::shared_ptr<LinearNeuron> LinearNeuronSPtr;
-typedef boost::shared_ptr<LogarithmNeuron> LogarithmNeuronSPtr;
+typedef boost::shared_ptr<LogarithmicNeuron> LogarithmicNeuronSPtr;
 typedef boost::shared_ptr<TanhNeuron> TanhNeuronSPtr;
 
 }

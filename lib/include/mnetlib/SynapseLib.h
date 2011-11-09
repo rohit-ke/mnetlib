@@ -129,7 +129,7 @@ namespace Mnetlib
 
     std::string toString();
   protected:
-    ublas::matrix<double> _weight,oldweight,_previousDelta;
+    ublas::matrix<double> _weight,_previousDelta;
     ublas::vector<double> in_vect,error,_gradient;
 
   };

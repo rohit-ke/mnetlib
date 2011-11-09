@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Net netType="ffonlineNet">
 	<InputSynapse inLine="4" outLine="4"/>
-	<InputLayer idx="1" type="linear" neuronNum="4" />
+	<InputLayer idx="1" type="sigmoid" neuronNum="4" />
 	<Synapse inLine="4" outLine="8"/>
-	<Layer idx="2" type="sigmoid" neuronNum="8" />
-	<Synapse inLine="8" outLine="4"/>
-	<OutputLayer idx="3" type="logh" neuronNum="4" />
-	<OutputSynapse inLine="4" outLine="4"/>
+	<Layer idx="2" type="tanh" neuronNum="8" />
+	<Synapse inLine="8" outLine="3"/>
+	<OutputLayer idx="3" type="sigmoid" neuronNum="3" />
+	<OutputSynapse inLine="3" outLine="3"/>
 </Net>

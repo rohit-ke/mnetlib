@@ -96,7 +96,7 @@ namespace Mnetlib
 
   /*------------------------------*/
 
-  HiddenSynapse::HiddenSynapse(int iIn, int iOut):Synapse(iIn,iOut),_weight(iOut,iIn),oldweight(iOut,iIn),in_vect(iIn),error(iIn),_gradient(iOut)
+  HiddenSynapse::HiddenSynapse(int iIn, int iOut):Synapse(iIn,iOut),_weight(iOut,iIn),_previousDelta(iOut,iIn),in_vect(iIn),error(iIn),_gradient(iOut)
   {
     inizialize_weight();
 
@@ -172,10 +172,10 @@ namespace Mnetlib
         for (int j=0;j<_in;j++)
           {
             if(cicle==0 && _index==0)
-              oldweight(i,j)=_weight(i,j);
+              _previousDelta(i,j)=0;
             double tmp=_weight(i,j);
-            _weight(i,j) -=rate*_gradient(i)*in_vect(j)-momentum*(tmp-oldweight(i,j));
-            oldweight(i,j)=tmp;
+            _weight(i,j) -=rate*_gradient(i)*in_vect(j)-momentum*(_previousDelta(i,j));
+            _previousDelta(i,j)=_weight(i,j)-tmp;
 
           }
       }
@@ -183,6 +183,7 @@ namespace Mnetlib
       {
         error(j)=0;
       }
+
   }
 
   std::string InputSynapse::toString()

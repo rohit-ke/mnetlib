@@ -33,7 +33,7 @@ namespace Mnetlib
 		
 		_input=arg;
 		
-		_outvalue=1/(1+exp(-_input));
+		_outvalue=_input;
 		
 		return _outvalue;
 	}
@@ -44,7 +44,7 @@ namespace Mnetlib
 		double out=o;
 		double ret=0;
 		
-		ret=out*(1-out)*err;
+		ret=out*err;
 			
 		return ret;
 	}
@@ -54,7 +54,7 @@ namespace Mnetlib
 		
 		_input=arg;
 		
-		_outvalue=tanh(_input);
+		_outvalue=1/(1+exp(-_input));
 		
 		return _outvalue;
 	}
@@ -65,28 +65,28 @@ namespace Mnetlib
 		double out=o;
 		double ret=0;
 		
-		ret=(1+out)*(1-out)*err;
+		ret=out*(1-out)*err;
 			
 		return ret;
 	}
 
-	double LogarithmNeuron::Run(double arg)
+	double LogarithmicNeuron::Run(double arg)
 	{
 
 	  _input=arg;
 
-	  _outvalue= tanh(_input);
+	  _outvalue= log(_input);
 
 	  return _outvalue;
 	}
 
-	double LogarithmNeuron::RunBack(double o,double e)
+	double LogarithmicNeuron::RunBack(double o,double e)
 	{
 	  double err=e;
 	  double out=o;
 	  double ret=0;
 
-	  ret=(1+out)*(1-out)*err;
+	  ret=(1/exp(out))*err;
 
 	  return ret;
 	}
@@ -107,7 +107,7 @@ namespace Mnetlib
 		double out=o;
 		double ret=0;
 		
-		ret=(1-tanh(out)*tanh(out))*err;
+		ret=(1-out*out)*err;
 			
 		return ret;
 	}

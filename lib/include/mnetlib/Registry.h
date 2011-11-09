@@ -78,7 +78,7 @@ namespace Mnetlib
     std::map<std::string, NetClassFactory*> _netRegistry;
     NeuronFactoryWrapper<SigmoidNeuron> sigmoidFactory;
     NeuronFactoryWrapper<TanhNeuron> tanhFactory;
-    NeuronFactoryWrapper<LogarithmNeuron> logarithmicFactory;
+    NeuronFactoryWrapper<LogarithmicNeuron> logarithmicFactory;
     NeuronFactoryWrapper<LinearNeuron> linearFactory;
     LayerFactoryWrapper<InputLayer> inputFactory;
     LayerFactoryWrapper<HiddenLayer> hiddenFactory;
