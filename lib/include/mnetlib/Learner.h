@@ -23,6 +23,9 @@
 *
 */
 
+#ifndef LEARNER_H_
+#define LEARNER_H_
+
 #include "Pattern.h"
 #include "Net.h"
 #include "Registry.h"
@@ -49,7 +52,7 @@ namespace Mnetlib
 		/*
 		 * Distruttore di default
 		 */
-		~Learner();
+		virtual ~Learner();
 		
 		/*Costruisce i pattern d'apprendimento*/
 		void buildTrainPattern(string datafile);
@@ -62,6 +65,12 @@ namespace Mnetlib
 		
                 void trainNet(Net* ioNet);
 
+                void trainNet();
+
+                void setNet(NetSPtr iNet);
+
+                NetSPtr getNet();
+
 		int findBestNet();
 		
 		/* 
@@ -73,10 +82,11 @@ namespace Mnetlib
 		 */
 		void set_parameter(double n,double m, int c, int Hmin, int Hmax, int Nth);
 		
+		void set_parameter(double n,double m, int c);
 		
 	private:
-			Pattern* trainPattern;
-			Pattern* testPattern;
+			PatternSPtr trainPattern;
+			PatternSPtr testPattern;
 			string patternFile;
 			int maxHidden;
 			int minHidden;
@@ -92,7 +102,7 @@ namespace Mnetlib
 			int mode;
 			int train_cicles;//memorizza il numero massimo di cicli d'apprendimento
 			int Nthread;
-			
+			NetSPtr _Net;
 				struct info
 				{
 					int trainNi;
@@ -116,4 +126,8 @@ namespace Mnetlib
 				
 
 	};
+
+	typedef boost::shared_ptr<Learner> LearnerSPtr;
 }
+
+#endif //LEARNER_H_

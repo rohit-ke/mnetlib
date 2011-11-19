@@ -78,6 +78,7 @@ namespace Mnetlib
 		double max(ublas::vector<double> in_array,int length);
 		//double* normalizer;
 	};
-}
+
+	typedef boost::shared_ptr<Pattern> PatternSPtr;}
 
 #endif

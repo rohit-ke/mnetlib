@@ -69,8 +69,8 @@ namespace Mnetlib
     NeuronSPtr getNewNeuron(const std::string& name);
     SynapseSPtr getNewSynapse(const std::string& name, const int n, const int l);
     LayerSPtr getNewLayer (const std::string& lName, const std::string& nName, const int n);
-    Net* getNewNet(const std::string& name,const int ni, const int nh, const int no);
-    Net* getNewNet(const std::string& path);
+    NetSPtr getNewNet(const std::string& name,const int ni, const int nh, const int no);
+    NetSPtr getNewNet(const std::string& path);
   protected:
     std::map<std::string, NeuronClassFactory*> _neuronRegistry;
     std::map<std::string, SynapseClassFactory*> _synapseRegistry;
@@ -102,7 +102,7 @@ namespace Mnetlib
     typedef std::map<const XMLCh*, decodeFunction, CompareNodeName> decode_map;
 
     decode_map _nodeDecoderMap;
-    Net* _net;
+    NetSPtr _net;
   };
 
 }

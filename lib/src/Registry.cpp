@@ -22,7 +22,7 @@
  *   francesco.amenta@gmail.com
  *
  */
-
+#define DEBUG
 
 #include "Registry.h"
 #include "Synapse.h"
@@ -112,11 +112,13 @@ namespace Mnetlib
     return oSynapseSPtr;
   }
 
-  Net* Registry::getNewNet(const std::string& name,const int ni, const int nh, const int no)
+  NetSPtr Registry::getNewNet(const std::string& name,const int ni, const int nh, const int no)
   {
+    NetSPtr net;
+
     if ( _netRegistry[name] )
       {
-        Net* net=_netRegistry[name]->create();
+        net=_netRegistry[name]->create();
         vector<SynapseSPtr> vs;
         vector<LayerSPtr> vl;
         SynapseSPtr s1=getNewSynapse("inputSynapse",ni,1);
@@ -138,10 +140,10 @@ namespace Mnetlib
         vs.push_back(s2);
         net->setLayer(vl);
         net->setSynapse(vs);
-        return net;
+
       }
 
-    return 0;
+    return net;
   }
 
   void Registry::decodeNetNode(DOMNode* ioNode)
@@ -265,7 +267,7 @@ namespace Mnetlib
       _net->pushSynapse(aSynapse);
     }
 
-  Net* Registry::getNewNet(const std::string& path)
+  NetSPtr Registry::getNewNet(const std::string& path)
   {
     //Open file
     INFO_MSG( "getNewNet from xml file");
@@ -277,7 +279,7 @@ namespace Mnetlib
         cout << "Error during initialization! :\n"
             << message << "\n";
         XMLString::release(&message);
-        return 0;
+        return NetSPtr();
     }
 
     //Parse
@@ -289,38 +291,13 @@ namespace Mnetlib
     try {
         parser->parse(path.c_str());
     }
-    catch (const XMLException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Exception message is: \n"
-            << message << "\n";
-        XMLString::release(&message);
-        return 0;
-    }
-    catch (const DOMException& toCatch) {
-        char* message = XMLString::transcode(toCatch.msg);
-        cout << "Exception message is: \n"
-            << message << "\n";
-        XMLString::release(&message);
-        return 0;
-    }
-    catch (const SAXParseException& toCatch) {
-        char* message = XMLString::transcode(toCatch.getMessage());
-        cout << "Exception message is: \n"
-            << message << "\n";
-        XMLString::release(&message);
-        return 0;
-    }
-    catch (std::exception& e) {
-        DEBUG_MSG( "Unexpected Exception " );
-        DEBUG_MSG( e.what());
-        return 0;
-    }
+    CATCH_XML(NetSPtr());
+
 
     std::string aNodeValue, aNetType,aLayerType;
     DOMDocument* pDoc=parser->getDocument();
     DOMNode* pCurrent = NULL;
     DOMElement* pRoot=pDoc->getDocumentElement();
-    Net* net;
 
     // create an iterator to visit all text nodes.
     DOMNodeIterator* iterator=pDoc->createNodeIterator(pRoot,
@@ -341,10 +318,9 @@ namespace Mnetlib
     _net->connect();
     DEBUG_MSG( "dumping net content");
     DEBUG_MSG(_net->toString());
-    return _net;
     delete parser;
     delete errHandler;
-    return 0;
+    return _net;
 
   }
 }

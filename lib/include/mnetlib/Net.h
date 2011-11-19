@@ -108,6 +108,8 @@ namespace Mnetlib{
 		
 			
 	};
+
+	typedef boost::shared_ptr<Net> NetSPtr;
 }
 
 #endif

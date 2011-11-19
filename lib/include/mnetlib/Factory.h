@@ -90,7 +90,7 @@ namespace Mnetlib
 	{
 	public:
 		virtual ~NetClassFactory(){};
-		virtual Net* create()=0;
+		virtual NetSPtr create()=0;
 		virtual std::string name()=0;
 
 	};
@@ -100,7 +100,7 @@ namespace Mnetlib
 	{
 	public:
 	virtual ~NetFactoryWrapper(){};
-	virtual Net* create(){ return T::create();}
+	virtual NetSPtr create(){ return T::create();}
 	virtual std::string name(){ return T::name();}
 	};
 }	

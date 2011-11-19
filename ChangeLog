@@ -4,6 +4,13 @@
 =													 =
 ======================================================
 
+Chagelist mnetlib 0.2.0 released 09-11-2011
+=======================
+- Fixed neuron transfer function
+- Start using xerces library
+- Changed directorie's structure
+- First implementation of XML adapter
+
 Chagelist mnetlib 0.1.0 released 01-02-2010
 =======================
 - Added support for autotools

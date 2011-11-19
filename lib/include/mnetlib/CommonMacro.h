@@ -30,4 +30,33 @@ while( false )
 //Error Message. Red Color
 #define ERROR_MSG(str) do { std::cout << "\E[1m\E[31m" << str << "\E[0m" <<std::endl; } while( false )
 
+#define CATCH_XML(ret)\
+catch (const XMLException& toCatch) {\
+        char* message = XMLString::transcode(toCatch.getMessage());\
+        cout << "Exception message is: \n"\
+            << message << "\n";\
+        XMLString::release(&message);\
+        return ret;\
+    }\
+    catch (const DOMException& toCatch) {\
+        char* message = XMLString::transcode(toCatch.msg);\
+        cout << "Exception message is: \n"\
+            << message << "\n";\
+        XMLString::release(&message);\
+        return ret;\
+    }\
+    catch (const SAXParseException& toCatch) {\
+        char* message = XMLString::transcode(toCatch.getMessage());\
+        cout << "Exception message is: \n"\
+            << message << "\n";\
+        XMLString::release(&message);\
+        return ret;\
+    }\
+    catch (std::exception& e) {\
+        DEBUG_MSG( "Unexpected Exception " );\
+        DEBUG_MSG( e.what());\
+        return ret;\
+    }\
+
 #endif /* COMMONMACRO_H_ */
+

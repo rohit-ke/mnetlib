@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Learner learningRate="0.15" momentum="0.4" trainingCycles="200">
+	<Pattern type="train" path="test/data/building.train"/>
+	<Pattern type="test" path="test/data/building.test"/>
+	<Net path="test/data/TestBasicLearner_Net.xml"/>
+</Learner>

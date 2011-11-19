@@ -38,7 +38,7 @@ namespace Mnetlib
 		
 		virtual ~FFOnLineBackNet();
 		
-		static FFOnLineBackNet* create(){ return new FFOnLineBackNet();};
+		static NetSPtr create(){ return NetSPtr(new FFOnLineBackNet());};
 		
 		static std::string name(){ return "ffonlineNet";} ;	
 		

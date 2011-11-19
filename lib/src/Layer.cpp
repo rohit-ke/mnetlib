@@ -24,8 +24,8 @@
 */
 
 //#define DEBUG
-#include "Layer.h"
-#include "CommonMacro.h"
+#include <Layer.h>
+#include <CommonMacro.h>
 
 namespace Mnetlib
 {

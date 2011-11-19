@@ -24,8 +24,8 @@
 */
 //#define DEBUG
 
-#include "NetLib.h"
-#include "CommonMacro.h"
+#include <NetLib.h>
+#include <CommonMacro.h>
 
 namespace Mnetlib
 {

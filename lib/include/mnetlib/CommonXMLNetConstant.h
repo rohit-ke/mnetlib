@@ -174,5 +174,96 @@ namespace Mnetlib
             xercesc::chNull
         };
 
+  const XMLCh kLearnerNodeName[] =
+        {
+            xercesc::chLatin_L,
+            xercesc::chLatin_e,
+            xercesc::chLatin_a,
+            xercesc::chLatin_r,
+            xercesc::chLatin_n,
+            xercesc::chLatin_e,
+            xercesc::chLatin_r,
+            xercesc::chNull
+        };
+
+  static const XMLCh kPatternKey[] =
+          {
+              xercesc::chLatin_P,
+              xercesc::chLatin_a,
+              xercesc::chLatin_t,
+              xercesc::chLatin_t,
+              xercesc::chLatin_e,
+              xercesc::chLatin_r,
+              xercesc::chLatin_n,
+              xercesc::chNull
+          };
+
+  static const XMLCh kTypeKey[] =
+        {
+            xercesc::chLatin_t,
+            xercesc::chLatin_y,
+            xercesc::chLatin_p,
+            xercesc::chLatin_e,
+            xercesc::chNull
+        };
+
+  static const XMLCh kPathKey[] =
+          {
+              xercesc::chLatin_p,
+              xercesc::chLatin_a,
+              xercesc::chLatin_t,
+              xercesc::chLatin_h,
+              xercesc::chNull
+          };
+
+  static const XMLCh kMomentumKey[] =
+        {
+            xercesc::chLatin_m,
+            xercesc::chLatin_o,
+            xercesc::chLatin_m,
+            xercesc::chLatin_e,
+            xercesc::chLatin_n,
+            xercesc::chLatin_t,
+            xercesc::chLatin_u,
+            xercesc::chLatin_m,
+            xercesc::chNull
+        };
+
+  static const XMLCh kLearningRateKey[] =
+          {
+              xercesc::chLatin_l,
+              xercesc::chLatin_e,
+              xercesc::chLatin_a,
+              xercesc::chLatin_r,
+              xercesc::chLatin_n,
+              xercesc::chLatin_i,
+              xercesc::chLatin_n,
+              xercesc::chLatin_g,
+              xercesc::chLatin_R,
+              xercesc::chLatin_a,
+              xercesc::chLatin_t,
+              xercesc::chLatin_e,
+              xercesc::chNull
+          };
+
+  static const XMLCh kTrainigCyclesKey[] =
+          {
+              xercesc::chLatin_t,
+              xercesc::chLatin_r,
+              xercesc::chLatin_a,
+              xercesc::chLatin_i,
+              xercesc::chLatin_n,
+              xercesc::chLatin_i,
+              xercesc::chLatin_n,
+              xercesc::chLatin_g,
+              xercesc::chLatin_C,
+              xercesc::chLatin_y,
+              xercesc::chLatin_c,
+              xercesc::chLatin_l,
+              xercesc::chLatin_e,
+              xercesc::chLatin_s,
+              xercesc::chNull
+          };
+
 }
 #endif /* COMMONXMLNETCONSTANT_H_ */

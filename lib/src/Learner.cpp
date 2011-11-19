@@ -32,35 +32,43 @@ namespace Mnetlib{
 	Learner::Learner(){}
 	
 	Learner::~Learner()
-	{
-		delete trainPattern;
-		delete testPattern;
-	}
+	{}
 	
+	void Learner::setNet(NetSPtr iNet)
+	{
+	  DEBUG_MSG("Setting Net");
+	  _Net=iNet;
+	}
+
+	NetSPtr Learner::getNet()
+	{
+	  return _Net;
+	}
+
 	void * Learner::trainNet(void * arg)
 	{
-		struct info* f=(struct info*)arg;
-		try{
-			Registry reg;
-			Net* net=reg.getNewNet("ffonlineNet",f->trainNi,f->n,f->trainNo);
-			//f->trainI.putvalue();
-		//train net	
-			net->setPattern(f->trainI,f->trainO,f->trainLng,f->trainNo);
-			net->set_parameter(f->l,f->m,f->c);
-			net->trainNet();
-		//test net	
-			net->setPattern(f->testI,f->testO,f->testLng,f->trainNo);
-			net->testNet();
-			double ret=net->getGlobalError();
-			double mse=net->getRMSE();
-		//Salvo nella struttura dati l'errore globale della rete appena creata
-			f->err=ret;
-			cout<<"GLOBERR--> "<< ret<<" con nodi: "<< f->n <<"\n";
-			f->rmse=mse;
-			cout<<"RMSE--> "<< mse<<" con nodi: "<< f->n <<"\n";
-			delete net;
-		}catch (exception* e) { cout << e->what()<<"\n"; }
-		return 0;
+	  struct info* f=(struct info*)arg;
+	  try{
+	      Registry reg;
+	      NetSPtr net=reg.getNewNet("ffonlineNet",f->trainNi,f->n,f->trainNo);
+	      //f->trainI.putvalue();
+	      //train net
+	      net->setPattern(f->trainI,f->trainO,f->trainLng,f->trainNo);
+	      net->set_parameter(f->l,f->m,f->c);
+	      net->trainNet();
+	      //test net
+	      net->setPattern(f->testI,f->testO,f->testLng,f->trainNo);
+	      net->testNet();
+	      double ret=net->getGlobalError();
+	      double mse=net->getRMSE();
+	      //Salvo nella struttura dati l'errore globale della rete appena creata
+	      f->err=ret;
+	      cout<<"GLOBERR--> "<< ret<<" con nodi: "<< f->n <<"\n";
+	      f->rmse=mse;
+	      cout<<"RMSE--> "<< mse<<" con nodi: "<< f->n <<"\n";
+
+	  }catch (exception* e) { cout << e->what()<<"\n"; }
+	  return 0;
 	}
 	
 	void Learner::trainNet(Net* ioNet)
@@ -85,7 +93,28 @@ namespace Mnetlib{
 
 	  }
 	  catch (std::exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
-	  catch (exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
+	}
+
+	void Learner::trainNet()
+	{
+	  try{
+	      INFO_MSG("Starting net train");
+	      DEBUG_MSG("Setting pattern");
+	      _Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,testNcO);
+	      DEBUG_MSG("Setting net parameter");
+	      _Net->set_parameter(learning_rate,momentum,train_cicles);
+	      _Net->trainNet();
+	      //test net
+	      _Net->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,trainNcO);
+	      _Net->testNet();
+	      double ret=_Net->getGlobalError();
+	      double mse=_Net->getRMSE();
+	      //Salvo nella struttura dati l'errore globale della rete appena creata
+	      INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
+	      INFO_MSG("Testing Dataset: RMSE--> "<< mse);
+
+	  }
+	  catch (std::exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
 	}
 
 	int Learner::findBestNet()
@@ -160,7 +189,7 @@ namespace Mnetlib{
 	
 	void Learner::buildTrainPattern(string datafile)
 	{
-		trainPattern=new Pattern();
+		trainPattern=PatternSPtr(new Pattern());
 		trainPattern->loadPatternFile(datafile);
 		trainLenght=trainPattern->getLenght();
 		trainNcI=trainPattern->getNin();
@@ -169,7 +198,7 @@ namespace Mnetlib{
 	
 	void Learner::buildTestPattern(string datafile)
 	{
-		testPattern=new Pattern();
+		testPattern=PatternSPtr(new Pattern());
 		testPattern->loadPatternFile(datafile);
 		testLenght=testPattern->getLenght();
 		testNcI=testPattern->getNin();
@@ -184,5 +213,12 @@ namespace Mnetlib{
 		minHidden=Hmin;
 		maxHidden=Hmax;
 		Nthread=Nth;
+	}
+
+	void Learner::set_parameter(double n,double m, int c)
+	{
+	  learning_rate=n;
+	  momentum=m;
+	  train_cicles=c;
 	}
 }
