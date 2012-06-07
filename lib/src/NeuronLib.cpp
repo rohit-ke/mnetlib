@@ -107,9 +107,30 @@ namespace Mnetlib
 		double out=o;
 		double ret=0;
 		
-		ret=(1-out*out)*err;
+		ret=(1-out)*(1+out)*err;
 			
 		return ret;
 	}
+
+	double GaussianNeuron::Run(double arg)
+	{
+
+	  _input=arg;
+
+	  _outvalue=exp(-_input*_input);
+
+	  return _outvalue;
+	}
+
+	double GaussianNeuron::RunBack(double o,double e)
+	{
+	  double err=e;
+	  double out=o;
+	  double ret=(-2.0 * out * _input)*err;
+	  //ret=(1-out*out)*err;
+
+	  return ret;
+	}
+
 }
 

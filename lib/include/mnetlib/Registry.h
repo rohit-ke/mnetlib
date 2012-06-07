@@ -80,6 +80,10 @@ namespace Mnetlib
     NeuronFactoryWrapper<TanhNeuron> tanhFactory;
     NeuronFactoryWrapper<LogarithmicNeuron> logarithmicFactory;
     NeuronFactoryWrapper<LinearNeuron> linearFactory;
+    NeuronFactoryWrapper<GaussianNeuron> gaussianFactory;
+    NeuronFactoryWrapper<LinearNeuron> sineFactory;
+    NeuronFactoryWrapper<LinearNeuron> cosineFactory;
+    NeuronFactoryWrapper<LinearNeuron> expFactory;
     LayerFactoryWrapper<InputLayer> inputFactory;
     LayerFactoryWrapper<HiddenLayer> hiddenFactory;
     LayerFactoryWrapper<OutputLayer> outputFactory;

@@ -65,7 +65,8 @@ namespace Mnetlib{
 	
 	void Pattern::buildIn(string line, int index)
 	{
-		StringTokenizer strtok= StringTokenizer(line," ");
+	  //TODO Unsafe!!! Add try/catch check nextFloatToken out!
+	  StringTokenizer strtok= StringTokenizer(line," ");
 		for(int i=0;i<nCol;i++)
 		{
 			if(!strtok.hasMoreTokens()){break;}
@@ -76,6 +77,7 @@ namespace Mnetlib{
 	
 	void Pattern::buildOut(string line, int index)
 	{
+          //TODO Unsafe!!! Add try/catch check nextFloatToken out!
 		StringTokenizer strtok= StringTokenizer(line," ");
 		for(int i=0;i<nColOut;i++)
 		{

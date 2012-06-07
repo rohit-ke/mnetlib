@@ -95,17 +95,56 @@ namespace Mnetlib{
 	  catch (std::exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
 	}
 
+	void Learner::kFoldTrainNet(int kValue)
+	{
+          try{
+              INFO_MSG("Starting net train");
+              DEBUG_MSG("Setting pattern");
+              _Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,testNcO);
+              DEBUG_MSG("Setting net parameter");
+              _Net->set_parameter(learning_rate,momentum,train_cicles);
+              PatternSPtr aTestPattern(new Pattern()),aValidatePattern(new Pattern());
+              for(int run=0;run<kValue; run++ )
+                {
+                  this->buildKSequentialTrainPattern(trainPattern,kValue,run,aTestPattern,aValidatePattern);
+                  _Net->setPattern(aTestPattern->dataIn,aTestPattern->dataOut,aTestPattern->getLenght(),aTestPattern->getNout());
+                  _Net->trainNet();
+                                //test net
+                  _Net->setPattern(aValidatePattern->dataIn,aValidatePattern->dataOut,aValidatePattern->getLenght(),aValidatePattern->getNout());
+                  _Net->testNet();
+                                double ret=_Net->getGlobalError();
+                                double mse=_Net->getRMSE();
+                                //Salvo nella struttura dati l'errore globale della rete appena creata
+                                INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
+                                INFO_MSG("Testing Dataset: RMSE--> "<< mse);
+                }
+#if 0
+              _Net->trainNet();
+              //test net
+              _Net->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,trainNcO);
+              _Net->testNet();
+              double ret=_Net->getGlobalError();
+              double mse=_Net->getRMSE();
+              //Salvo nella struttura dati l'errore globale della rete appena creata
+              INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
+              INFO_MSG("Testing Dataset: RMSE--> "<< mse);
+#endif
+          }
+          catch (std::exception* e) { cout<< "Error occurred while training the net.\n" << e->what()<<"\n"; }
+
+	}
+
 	void Learner::trainNet()
 	{
 	  try{
 	      INFO_MSG("Starting net train");
 	      DEBUG_MSG("Setting pattern");
-	      _Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,testNcO);
+	      _Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,trainNcO);
 	      DEBUG_MSG("Setting net parameter");
 	      _Net->set_parameter(learning_rate,momentum,train_cicles);
 	      _Net->trainNet();
 	      //test net
-	      _Net->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,trainNcO);
+	      _Net->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,testNcO);
 	      _Net->testNet();
 	      double ret=_Net->getGlobalError();
 	      double mse=_Net->getRMSE();
@@ -114,7 +153,7 @@ namespace Mnetlib{
 	      INFO_MSG("Testing Dataset: RMSE--> "<< mse);
 
 	  }
-	  catch (std::exception* e) { cout<< "Error durin net train.\n" << e->what()<<"\n"; }
+	  catch (std::exception* e) { cout<< "Error occurred while training the net.\n" << e->what()<<"\n"; }
 	}
 
 	int Learner::findBestNet()
@@ -221,4 +260,65 @@ namespace Mnetlib{
 	  momentum=m;
 	  train_cicles=c;
 	}
+
+        void Learner::buildKRandomTrainPattern(PatternSPtr iPattern, int k, PatternSPtr oTestPattern, PatternSPtr oValidatePattern)
+        {
+
+        }
+
+        void Learner::buildKSequentialTrainPattern(PatternSPtr iPattern, int k, int seq, PatternSPtr& oTestPattern, PatternSPtr& oValidatePattern)
+        {
+          try{
+          int aValidateTestSize=iPattern->getLenght()/k +iPattern->getLenght()%k;
+          INFO_MSG("Validate set size:" << aValidateTestSize);
+
+          int aGenericTestSetSize = (iPattern->getLenght()-aValidateTestSize)/(k-1);
+          INFO_MSG("Generic set size:" << aGenericTestSetSize);
+
+          doubleMat aValidateDataIn=doubleMat(aValidateTestSize,iPattern->getNin());
+          doubleMat aValidateDataOut=doubleMat(aValidateTestSize,iPattern->getNout());
+          doubleMat aTestDataIn=doubleMat(aGenericTestSetSize*(k-1),iPattern->getNin());
+          doubleMat aTestDataOut=doubleMat(aGenericTestSetSize*(k-1),iPattern->getNout());
+          int index=0;
+          INFO_MSG("Building Test set. Current index: " << index);
+          for(int i=0; i<aGenericTestSetSize*seq; i++)
+            {
+              for(int z=0; z<iPattern->getNin();z++)
+                {
+                  aTestDataIn(index,z)=iPattern->dataIn(index,z);
+                }
+              for(int l=0; l<iPattern->getNout();l++)
+                {
+                  aTestDataOut(index,l)=iPattern->dataOut(index,l);
+                }
+              index++;
+            }
+          INFO_MSG("Building Validation set. Current index: " << index);
+          for(int i=0; i<aValidateTestSize; i++)
+            {
+              for(int z=0; z<iPattern->getNin();z++)
+                 {
+                  aValidateDataIn(i,z)=iPattern->dataIn(index,z);
+                 }
+               for(int l=0; l<iPattern->getNout();l++)
+                 {
+                   aValidateDataOut(i,l)=iPattern->dataOut(index,l);
+                 }
+              //DEBUG_MSG("index: " << index);
+              //DEBUG_MSG("In data: " << aValidateDataIn(i,1));
+              //DEBUG_MSG("Out data: " << aValidateDataOut(i,1));
+              index++;
+            }
+          INFO_MSG("Building Test set. Current index: " << index);
+          for(int i=0; i<aGenericTestSetSize*(k-seq -1); i++)
+            {
+              aTestDataIn(i)=iPattern->dataIn(index);
+              aTestDataOut(i)=iPattern->dataOut(index);
+              index++;
+            }
+          oTestPattern->dataIn=aTestDataIn;
+          oTestPattern->dataOut=aTestDataOut;
+          }
+                    catch (std::exception* e) { cout<< "Error occurred while training the net.\n" << e->what()<<"\n"; }
+        }
 }

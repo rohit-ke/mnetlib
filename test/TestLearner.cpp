@@ -36,9 +36,8 @@ int main(){
 
   try{
       LearnerAdapter aAdapter;
-      LearnerSPtr aLearner =aAdapter.getLearner("test/data/TestBasicLearner_Learner.xml");
-      aLearner->kFoldTrainNet(10);
-      //aLearner->trainNet();
+      LearnerSPtr aLearner =aAdapter.getLearner("test/data/TestLearner_Learner.xml");
+      aLearner->trainNet();
   }
   catch (exception* e)
   {

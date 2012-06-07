@@ -13,7 +13,7 @@ headerDir = $(srcdir)/../lib/include/
 # Include hand's header when compiling this directory.
 AM_CPPFLAGS = -I$(headerDir) -I -L $(srcdir)/../lib/src/
 
- bin_PROGRAMS = bench testbasiclearner
+ bin_PROGRAMS = bench testbasiclearner testLearner
  bench_SOURCES = bench.cpp
  # link with the hand library.
  bench_LDADD = $(srcdir)/../lib/src/libmnetlib.la -lpthread -lxerces-c
@@ -21,4 +21,8 @@ AM_CPPFLAGS = -I$(headerDir) -I -L $(srcdir)/../lib/src/
  testbasiclearner_SOURCES = TestBasicLearner.cpp
  # link with the hand library.
  testbasiclearner_LDADD = $(srcdir)/../lib/src/libmnetlib.la -lpthread -lxerces-c
+
+ testLearner_SOURCES = TestLearner.cpp
+ # link with the hand library.
+ testLearner_LDADD = $(srcdir)/../lib/src/libmnetlib.la -lpthread -lxerces-c
  

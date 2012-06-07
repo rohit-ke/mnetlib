@@ -150,7 +150,7 @@ namespace Mnetlib
     }
     catch (std::exception* e)
     {
-        cout<< "Error durin net train.\n" << e->what()<<"\n";
+        cout<< "Error during net train.\n" << e->what()<<"\n";
     }
   }
 

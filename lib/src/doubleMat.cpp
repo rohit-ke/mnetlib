@@ -24,7 +24,8 @@
 */
 
 #include "doubleMat.h"
-
+#include "Exception.h"
+#include <sstream>
 
 namespace Mnetlib{
 
@@ -73,18 +74,22 @@ namespace Mnetlib{
 	
 	double& doubleMat::operator() (int row, int col)
 	{
-			/*	if (row >= _row || col >= _col)
-			return NULL;*/
-			return _data[_col*row + col];
+	  std::stringstream aErrorString;
+	  aErrorString << "Input value: " << row << " " << col << " Matrix index: " << _row << " " << _col;
+	  if (row >= _row || col >= _col)
+	    throw IndexOutOfBoundException(aErrorString.str().c_str());
+	  return _data[_col*row + col];
 	}
 
 	double doubleMat::operator() (int row, int col) const
 	{
-		if (row >= _row || col >= _col)
-			return 0;
-		return _data[_col*row + col];
+	  std::stringstream aErrorString;
+	            aErrorString << "Input value: " << row << " " << col << " Matrix index: " << _row << " " << _col;
+	  if (row >= _row || col >= _col)
+	    throw IndexOutOfBoundException(aErrorString.str().c_str());
+	  return _data[_col*row + col];
 	}
-	
+
 	double& doubleMat::operator() (int row)
 {
 		/*	if (row >= _row || col >= _col)

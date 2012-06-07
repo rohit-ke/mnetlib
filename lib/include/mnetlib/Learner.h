@@ -60,12 +60,18 @@ namespace Mnetlib
 		/*Costruisce i pattern d'apprendimento*/
 		void buildTestPattern(string datafile);
 		
-		/*Costruisce la rete e mostra i risultati del train*/
+		void buildKRandomTrainPattern(PatternSPtr iPattern, int k, PatternSPtr oTestPattern, PatternSPtr oValidatePattern);
+
+                void buildKSequentialTrainPattern(PatternSPtr iPattern, int k, int seq, PatternSPtr& oTestPattern, PatternSPtr& oValidatePattern);
+
+                /*Costruisce la rete e mostra i risultati del train*/
 		static void * trainNet(void * arg);
 		
                 void trainNet(Net* ioNet);
 
                 void trainNet();
+
+                void kFoldTrainNet(int kValue);
 
                 void setNet(NetSPtr iNet);
 

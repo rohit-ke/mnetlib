@@ -64,7 +64,7 @@ public:
         double Run(double arg);
         double RunBack(double o,double e);
         static LogarithmicNeuron* create(){ return new LogarithmicNeuron();};
-        static std::string name(){ return "logh";} ;
+        static std::string name(){ return "log";} ;
 private:
         virtual ~LogarithmicNeuron(){};
 };
@@ -81,11 +81,24 @@ private:
         virtual ~TanhNeuron(){};
 };
 
+class GaussianNeuron: public Neuron
+{
+public:
+        double Run(double arg);
+        double RunBack(double o,double e);
+        static GaussianNeuron* create(){ return new GaussianNeuron();};
+        static std::string name(){ return "gaussian";} ;
+private:
+        virtual ~GaussianNeuron(){};
+};
+
+
 typedef boost::shared_ptr<Neuron> NeuronSPtr;
 typedef boost::shared_ptr<SigmoidNeuron> SigmoidNeuronSPtr;
 typedef boost::shared_ptr<LinearNeuron> LinearNeuronSPtr;
 typedef boost::shared_ptr<LogarithmicNeuron> LogarithmicNeuronSPtr;
 typedef boost::shared_ptr<TanhNeuron> TanhNeuronSPtr;
+typedef boost::shared_ptr<GaussianNeuron> GaussianNeuronSPtr;
 
 }
 #endif /*NEURONLIB_H_*/

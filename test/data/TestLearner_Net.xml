@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Net netType="ffonlineNet">
+	<InputSynapse inLine="3" outLine="3"/>
+	<InputLayer idx="1" type="sigmoid" neuronNum="3" />
+	<Synapse inLine="3" outLine="20"/>
+	<Layer idx="2" type="sigmoid" neuronNum="20" />
+	<Synapse inLine="20" outLine="8"/>
+	<Layer idx="2" type="sigmoid" neuronNum="8" />
+	<Synapse inLine="8" outLine="3"/>
+	<OutputLayer idx="3" type="sigmoid" neuronNum="1" />
+	<OutputSynapse inLine="1" outLine="1"/>
+</Net>

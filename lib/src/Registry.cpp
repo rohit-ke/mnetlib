@@ -48,6 +48,7 @@ namespace Mnetlib
     registerNeuronFactory(&sigmoidFactory);
     registerNeuronFactory(&logarithmicFactory);
     registerNeuronFactory(&tanhFactory);
+    registerNeuronFactory(&gaussianFactory);
     registerLayerFactory(&inputFactory);
     registerLayerFactory(&hiddenFactory);
     registerLayerFactory(&outputFactory);

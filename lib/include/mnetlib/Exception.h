@@ -56,6 +56,18 @@ namespace Mnetlib
 	  }
 	};
 
+	class IndexOutOfBoundException: public exception
+	        {
+	        public:
+	          const char* error;
+	          IndexOutOfBoundException(const char* arg) : error(arg){}
+	          virtual const char* what() const throw()
+	          {
+	            std::string aError(error);
+	            aError = "Index Out of Bound!\n" + aError;
+	            return aError.c_str();
+	          }
+	        };
 
 }
 

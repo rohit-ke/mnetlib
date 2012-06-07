@@ -47,7 +47,7 @@ namespace Mnetlib
 		Pattern();
 		
 		~Pattern();
-		
+		//TODO move all logic to PatternUtil or facsimile
 		void loadPatternFile(string filename);
 		
 		int getLenght(){return nRow;};
@@ -64,6 +64,7 @@ namespace Mnetlib
 		
 		int getNout(){return nColOut;};
 		
+		//TODO should be private, add getter, setter, evaluate change to vector
 		doubleMat dataIn;
 		
 		doubleMat dataOut;

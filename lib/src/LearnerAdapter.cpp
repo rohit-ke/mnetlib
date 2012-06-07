@@ -95,7 +95,7 @@ namespace Mnetlib
     std::string aTrainigCycles=XMLString::transcode(fNodeAttribute);
     DEBUG_MSG( "Trainig Cycles: " << aTrainigCycles);
     _learner=LearnerSPtr(new Learner());
-    _learner->set_parameter(atoi(aLearningRate.c_str()),atoi(aMomentum.c_str()),atoi(aTrainigCycles.c_str()));
+    _learner->set_parameter(atof(aLearningRate.c_str()),atof(aMomentum.c_str()),atoi(aTrainigCycles.c_str()));
   }
 
   void LearnerAdapter::decodeNetNode(xercesc::DOMNode* ioNode)
@@ -124,7 +124,7 @@ namespace Mnetlib
     fNodeAttribute = aPatternNode->getAttribute(kTypeKey);
     std::string aPatternType=XMLString::transcode(fNodeAttribute);
     DEBUG_MSG( "Pattern type: " << aPatternType );
-
+    //TODO Type as enum, build function as template
     if(aPatternType=="train")
       {
         _learner->buildTrainPattern(aPatternPath);
