@@ -48,9 +48,9 @@ namespace Mnetlib
 		
 		void testNet();
 		
-		doubleMat getNetOut();
+		ublas::matrix<double>& getNetOut();
 		
-		void setPattern(doubleMat inp, doubleMat ex, int lenght, int out);
+		void setPattern(ublas::matrix<double>& inp, ublas::matrix<double>& ex, int lenght, int out);
 
 		std::string toString();
 	

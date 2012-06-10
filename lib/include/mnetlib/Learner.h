@@ -113,13 +113,13 @@ namespace Mnetlib
 				{
 					int trainNi;
 					int trainNo;
-					doubleMat trainI;
-					doubleMat trainO;
+					ublas::matrix<double> trainI;
+					ublas::matrix<double> trainO;
 					int trainLng;
 					int testNi;
 					int testNo;
-					doubleMat testI;
-					doubleMat testO;
+					ublas::matrix<double> testI;
+					ublas::matrix<double> testO;
 					int testLng;
 					double l;
 					double m;

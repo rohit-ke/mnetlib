@@ -26,7 +26,6 @@
 #ifndef PATTERN_H
 #define PATTERN_H
 
-#include "doubleMat.h"
 #include "StringTokenizer.h"
 #include <string>
 #include <iostream>
@@ -50,7 +49,7 @@ namespace Mnetlib
 		//TODO move all logic to PatternUtil or facsimile
 		void loadPatternFile(string filename);
 		
-		int getLenght(){return nRow;};
+		int getLenght(){return dataIn.size1();};
 		
 		ublas::matrix<double> normalize(ublas::matrix<double> nor);
 		
@@ -60,15 +59,15 @@ namespace Mnetlib
 		
 		void getparam(string line);
 		
-		int getNin(){return nCol;};
+		int getNin(){return dataIn.size2();};
 		
-		int getNout(){return nColOut;};
+		int getNout(){return dataOut.size2();};
 		
-		//TODO should be private, add getter, setter, evaluate change to vector
-		doubleMat dataIn;
-		
-		doubleMat dataOut;
-		
+		//TODO should be private, add getter, setter, evaluate change to boost:matrix
+		//ublas::matrix<double> dataIn;
+		ublas::matrix<double> dataIn;
+		//ublas::matrix<double> dataOut;
+		ublas::matrix<double> dataOut;
 	private:
 		ifstream* inFile;
 		//double* data;

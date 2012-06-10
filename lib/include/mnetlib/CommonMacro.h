@@ -12,6 +12,9 @@
 #include <sys/time.h>
 #include <sys/timeb.h>
 #include <sys/resource.h>
+#include <boost/foreach.hpp>
+
+#define foreach BOOST_FOREACH
 
 
 #ifdef DEBUG

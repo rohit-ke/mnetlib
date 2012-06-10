@@ -24,7 +24,7 @@
 */
 
 //#define DEBUG
-#include <Layer.h>
+#include "Layer.h"
 #include <CommonMacro.h>
 
 namespace Mnetlib
@@ -45,17 +45,27 @@ namespace Mnetlib
 		
 	void Layer::forward()
 	{
-	  DEBUG_MSG("forward funct");
-	  DEBUG_MSG("forward - neuron vect size: " << vect.size() << " max index: " <<_n);
-	 //DEBUG_MSG("forward - vect size: " << _insin-> << " max index: " <<_n);
-	  NeuronSPtr aux;
-	  for(int i=0; i<_n;i++)
-	    {
-	      aux=vect.at(i);
-	      double in=_insin->get_input(i);
-	      _outsin->set_out(i,aux->Run(in));
-	    }
-	  DEBUG_MSG("forward done");
+	  try{
+	      DEBUG_MSG("forward funct");
+	      DEBUG_MSG("forward - neuron vect size: " << vect.size() << " max index: " <<_n);
+	      DEBUG_MSG("forward - vect size: " << _insin->toString() << " max index: " <<_n);
+	      NeuronSPtr aux;
+	      for(int i=0; i<_n;i++)
+	        {
+	          aux=vect.at(i);
+	          double in=_insin->get_input(i);
+	          _outsin->set_out(i,aux->Run(in));
+	        }
+	      DEBUG_MSG("forward done");
+	  }
+	  catch(std::exception* e)
+	  {
+	      ERROR_MSG("Layer: Exception while forwarding. " << e->what());
+	  }
+	  //catch(...)
+	  //{
+	  //    ERROR_MSG("Layer: Unknown Exception while forwarding. ");
+	  //}
 	}
-	
+
 }

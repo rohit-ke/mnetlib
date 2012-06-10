@@ -64,7 +64,7 @@ namespace Mnetlib{
 		/*
 		 * Routine che restituisce le uscite della rete
 		 */
-		virtual doubleMat getNetOut(){throw new NotImplementedException("getNetOut");}
+		virtual ublas::matrix<double>& getNetOut(){throw new NotImplementedException("getNetOut");}
 		/*
 		 * Setta i parametri necessari per l'apprendimento della rete
 		 * 
@@ -77,7 +77,7 @@ namespace Mnetlib{
 		/*
 		 * Setta i pattern d'ingresso e gli esempi in uscita necessari per la fase d'apprendimento.
 		 */
-		virtual void setPattern(doubleMat inp, doubleMat ex, int lenght, int out){throw new NotImplementedException("setPattern");};
+		virtual void setPattern(ublas::matrix<double>& inp, ublas::matrix<double>& ex, int lenght, int out){throw new NotImplementedException("setPattern");};
 
 		virtual void connect() const=0 ;
 		

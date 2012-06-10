@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Learner learningRate="0.15" momentum="0.4" trainingCycles="350">
+<Learner learningRate="0.15" momentum="0.4" trainingCycles="200">
 	<Pattern type="train" path="test/data/test_mod"/>
 	<Pattern type="test" path="test/data/validate_set"/>
 	<Net path="test/data/TestLearner_Net.xml"/>

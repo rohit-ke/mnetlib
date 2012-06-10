@@ -29,8 +29,8 @@
 #include <boost/lexical_cast.hpp>
 #include "CommonMacro.h"
 
-//TODO passare da daubleMat a boost:matrix
-//TODO verificare utilizzo indici nell'hidden sinapse
+//TODO code review -> move to iterator/foreach
+//TODO HiddenSynapse: review index management
 
 namespace Mnetlib
 {
@@ -55,6 +55,7 @@ namespace Mnetlib
 
   double InputSynapse::get_input(int i)
   {
+    DEBUG_MSG("get_input - invect size: " << in_pattern.size1() <<" - " << in_pattern.size2() << " get param: " <<i << " index: "<< _index);
     return in_pattern(_index,i);
   }
 

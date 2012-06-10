@@ -46,20 +46,20 @@ namespace Mnetlib
 
     void inizialize_weight();
 
-    void set_pattern_input(doubleMat p){in_pattern=p;};
+    void set_pattern_input(ublas::matrix<double>& p){in_pattern=p;};
 
     double get_input(int i);
 
     void set_index(int i){_index=i;};
 
-    ublas::matrix<double> get_weight(){return weight;};
+    ublas::matrix<double>& get_weight(){return weight;};
 
-    void set_weight(ublas::matrix<double> w){weight=w;};
+    void set_weight(ublas::matrix<double>& w){weight=w;};
 
     std::string toString();
   protected:
     ublas::matrix<double> weight;
-    doubleMat in_pattern;
+    ublas::matrix<double> in_pattern;
   };
 
   class OutputSynapse: public Synapse
@@ -77,7 +77,7 @@ namespace Mnetlib
 
     void set_index(int i){_index=i;};
 
-    void set_example(doubleMat ex){example=ex;};
+    void set_example(ublas::matrix<double>& ex){example=ex;};
 
     double get_input(int i);
 
@@ -85,15 +85,15 @@ namespace Mnetlib
 
     void set_out(int i, double value);
 
-    ublas::matrix<double> get_weight(){return weight;};
+    ublas::matrix<double>& get_weight(){return weight;};
 
-    void set_weight(ublas::matrix<double> w){weight=w;};
+    void set_weight(ublas::matrix<double>& w){weight=w;};
 
     std::string toString();
   protected:
     ublas::matrix<double> weight;
     ublas::vector<double> in_vect,error;
-    doubleMat example;
+    ublas::matrix<double> example;
   };
 
   class HiddenSynapse: public Synapse
@@ -123,9 +123,9 @@ namespace Mnetlib
 
     void adjuste_weight(double rate, int cicle, double momentum);
 
-    ublas::matrix<double> get_weight(){return _weight;};
+    ublas::matrix<double>& get_weight(){return _weight;};
 
-    void set_weight(ublas::matrix<double> w){_weight=w;};
+    void set_weight(ublas::matrix<double>& w){_weight=w;};
 
     std::string toString();
   protected:

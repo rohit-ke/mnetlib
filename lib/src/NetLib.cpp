@@ -26,6 +26,8 @@
 
 #include <NetLib.h>
 #include <CommonMacro.h>
+#include <boost/numeric/ublas/matrix.hpp>
+using namespace boost::numeric::ublas;
 
 namespace Mnetlib
 {
@@ -47,8 +49,8 @@ namespace Mnetlib
 
   void FFOnLineBackNet::connect() const
   {
-    vector<SynapseSPtr>::const_iterator aSynapseIt=_synapse.begin();
-    for (vector<LayerSPtr>::const_iterator aLayerIt=_layer.begin(); aLayerIt!=_layer.end(); aLayerIt++)
+    std::vector<SynapseSPtr>::const_iterator aSynapseIt=_synapse.begin();
+    for (std::vector<LayerSPtr>::const_iterator aLayerIt=_layer.begin(); aLayerIt!=_layer.end(); aLayerIt++)
       {
         SynapseSPtr InSynapse=*aSynapseIt;
         aSynapseIt++;
@@ -82,14 +84,20 @@ namespace Mnetlib
     {
         DEBUG_MSG("Forward input");
         DEBUG_MSG("Layer size: " << _layer.size());
-        for (unsigned int i = 0; i < _layer.size(); ++i)
-          {
-            (_layer[i])->forward();
-          }
+
+        foreach(LayerSPtr aLayer,_layer)
+              {
+            aLayer->forward();
+              }
     }
     catch (std::exception* e)
     {
-        ERROR_MSG("Error durin net train.\n" << e->what());
+        ERROR_MSG("Error while forwarding the input.\n" << e->what());
+    }
+    catch (boost::exception* e)
+    {
+            //ERROR_MSG("Error during net train.\n" << e->what());
+        std::cout << e;
     }
   }
 
@@ -129,6 +137,7 @@ namespace Mnetlib
             for(int l_index=0;l_index<inlenght;l_index++)
               {
                 set_index(l_index);
+                DEBUG_MSG("Forwarding the input: index - " << l_index << " on " <<inlenght );
                 forward_input();
                 DEBUG_MSG("back error");
                 back_error();
@@ -141,7 +150,7 @@ namespace Mnetlib
             _global_error/=inlenght;
             _rmse=sqrt(_global_error);
 
-            if(!(current_cicle%5))
+            if(!(current_cicle%1))
               {
                 cout<<"Ciclo num: "<<current_cicle+1<<" ";
                 cout<<" Errore: "<<_global_error<<" RMSE: "<<_rmse<<"\n";
@@ -159,18 +168,21 @@ namespace Mnetlib
     _global_error=0;
     for(int l_index=0;l_index<inlenght;l_index++)
       {
+        set_index(l_index);
+        DEBUG_MSG("Forwarding the input: index - " << l_index << " on " <<inlenght );
         forward_input();
+        DEBUG_MSG("compute error");
         compute_error();
       }
     _global_error/=inlenght;
-    cout<<"Errore globale "<<_global_error<<"\n";
+    cout<<"Global Error: "<<_global_error<<"\n";
     _rmse=sqrt(_global_error);
-    cout<<"RMSE "<<_rmse<<"\n";
+    cout<<"RMSE: "<<_rmse<<"\n";
   }
 
-  doubleMat FFOnLineBackNet::getNetOut()
+  matrix<double>& FFOnLineBackNet::getNetOut()
   {
-    doubleMat out_value = doubleMat(inlenght,_out);
+    matrix<double> out_value = matrix<double>(inlenght,_out);
     for(int l_index=0;l_index<inlenght;l_index++)
       {
         forward_input();
@@ -183,8 +195,10 @@ namespace Mnetlib
     return out_value;
   }
 
-  void FFOnLineBackNet::setPattern(doubleMat inp, doubleMat ex, int lenght,int out)
+  void FFOnLineBackNet::setPattern(matrix<double>& inp, matrix<double>& ex, int lenght,int out)
   {
+    //string ssz2((unsigned long int&)inp.size2);
+    DEBUG_MSG("Setting Patter: " << lenght << " - " << out << " -inp- " << inp.size1() << " - " << inp.size2()<< " -ex- " << ex.size1() << " - " << ex.size2() );
     (_synapse[0])->set_pattern_input(inp);
     (_synapse[_synapse.size()-1])->set_example(ex);
     inlenght=lenght;

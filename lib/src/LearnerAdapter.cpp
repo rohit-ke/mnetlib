@@ -81,6 +81,7 @@ namespace Mnetlib
 
   void LearnerAdapter::decodeLearnerNode(xercesc::DOMNode* ioNode)
   {
+    try{
     DEBUG_MSG( "decodelearner");
     DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
     DEBUG_MSG( "Found Learner Node");
@@ -96,10 +97,12 @@ namespace Mnetlib
     DEBUG_MSG( "Trainig Cycles: " << aTrainigCycles);
     _learner=LearnerSPtr(new Learner());
     _learner->set_parameter(atof(aLearningRate.c_str()),atof(aMomentum.c_str()),atoi(aTrainigCycles.c_str()));
+    }catch (std::exception* e) { cout<< "Error occurred while decoding learner node.\n" << e->what()<<"\n"; }
   }
 
   void LearnerAdapter::decodeNetNode(xercesc::DOMNode* ioNode)
   {
+    try{
     DEBUG_MSG( "decodeNet");
     DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
     DEBUG_MSG( "Found Net Node");
@@ -110,11 +113,14 @@ namespace Mnetlib
     Registry reg;
     NetSPtr net=reg.getNewNet(aNetPath);
     _learner->setNet(net);
+    }catch (std::exception* e) { cout<< "Error occurred while decoding net node.\n" << e->what()<<"\n"; }
   }
 
   void LearnerAdapter::decodePatternNode(xercesc::DOMNode* ioNode)
     {
-    DEBUG_MSG( "decodePattern");
+    try{
+        DEBUG_MSG( "decodePattern");
+
     DEBUG_MSG( XMLString::transcode(ioNode->getNodeName()));
     DEBUG_MSG( "Found Pattern Node");
     DOMElement* aPatternNode = dynamic_cast<DOMElement*>(ioNode);
@@ -137,5 +143,6 @@ namespace Mnetlib
       {
         ERROR_MSG("Pattern type not supported");
       }
+    }catch (std::exception* e) { cout<< "Error occurred while decoding pattern node.\n" << e->what()<<"\n"; }
     }
 }

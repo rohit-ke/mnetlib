@@ -24,7 +24,10 @@
 */
 
 #include "Pattern.h"
+#include "CommonMacro.h"
+#include <boost/numeric/ublas/matrix.hpp>
 
+using namespace boost::numeric::ublas;
 using std::cout;
 
 namespace Mnetlib{
@@ -39,12 +42,13 @@ namespace Mnetlib{
 	
 	void Pattern::loadPatternFile(string filename)
 	{
-		fstream tmpFile(filename.c_str());
+	try{
+	  fstream tmpFile(filename.c_str());
  		string line;
 		getline(tmpFile, line);
 		getparam(line);
-		dataIn=doubleMat(nRow,nCol);
-		dataOut=doubleMat(nRow,nColOut);
+		dataIn= matrix<double>(nRow,nCol);
+		dataOut=matrix<double>(nRow,nColOut);
 		int n=0;
 		cout<<nRow<<","<<nCol<<","<<nColOut<<"\n";
 		while(!tmpFile.eof() && n<nRow)
@@ -61,28 +65,42 @@ namespace Mnetlib{
 			n++;
 		}
 		tmpFile.close();
+	}catch (std::exception& e) {
+	        DEBUG_MSG( "Unexpected Exception " );
+	        DEBUG_MSG( e.what());
+	    }
 	}
 	
 	void Pattern::buildIn(string line, int index)
 	{
 	  //TODO Unsafe!!! Add try/catch check nextFloatToken out!
+	  try{
 	  StringTokenizer strtok= StringTokenizer(line," ");
 		for(int i=0;i<nCol;i++)
 		{
 			if(!strtok.hasMoreTokens()){break;}
 			dataIn(index,i)=(double)strtok.nextFloatToken();
 		}
-		
+	  }catch (std::exception& e) {
+              DEBUG_MSG( "Unexpected Exception " );
+              DEBUG_MSG( e.what());
+          }
 	}
 	
 	void Pattern::buildOut(string line, int index)
 	{
           //TODO Unsafe!!! Add try/catch check nextFloatToken out!
-		StringTokenizer strtok= StringTokenizer(line," ");
+	try{
+	    StringTokenizer strtok= StringTokenizer(line," ");
+
 		for(int i=0;i<nColOut;i++)
 		{
 			dataOut(index,i)=(double)strtok.nextFloatToken();
 		}
+	}catch (std::exception& e) {
+            DEBUG_MSG( "Unexpected Exception " );
+            DEBUG_MSG( e.what());
+        }
 	}
 	
 	void Pattern::getparam(string line)

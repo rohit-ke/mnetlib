@@ -71,8 +71,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libmnetlib_la_DEPENDENCIES =
 am_libmnetlib_la_OBJECTS = NetLib.lo Layer.lo LayerLib.lo Pattern.lo \
-	NeuronLib.lo Learner.lo Registry.lo doubleMat.lo \
-	StringTokenizer.lo SynapseLib.lo LearnerAdapter.lo
+	NeuronLib.lo Learner.lo Registry.lo StringTokenizer.lo \
+	SynapseLib.lo LearnerAdapter.lo
 libmnetlib_la_OBJECTS = $(am_libmnetlib_la_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config/depcomp
@@ -212,10 +212,10 @@ top_srcdir = @top_srcdir@
 SUFFIXES = .cpp .hpp .idl .c .h .f .F .o .moc .cc
 lib_LTLIBRARIES = libmnetlib.la
 libmnetlib_la_SOURCES = NetLib.cpp Layer.cpp LayerLib.cpp Pattern.cpp NeuronLib.cpp Learner.cpp \
-			  			  Registry.cpp doubleMat.cpp StringTokenizer.cpp SynapseLib.cpp LearnerAdapter.cpp
+			  			  Registry.cpp StringTokenizer.cpp SynapseLib.cpp LearnerAdapter.cpp
 
 headerDir = $(srcdir)/../include/mnetlib/				
-include_HEADERS = ../include/mnetlib/doubleMat.h ../include/mnetlib/Exception.h ../include/mnetlib/Factory.h ../include/mnetlib/Layer.h \
+include_HEADERS = ../include/mnetlib/Exception.h ../include/mnetlib/Factory.h ../include/mnetlib/Layer.h \
 				 ../include/mnetlib/LayerLib.h ../include/mnetlib/Learner.h ../include/mnetlib/Net.h ../include/mnetlib/NetLib.h \
 				 ../include/mnetlib/Neuron.h ../include/mnetlib/NeuronLib.h ../include/mnetlib/Pattern.h ../include/mnetlib/Registry.h \
 				 ../include/mnetlib/StringTokenizer.h ../include/mnetlib/Synapse.h ../include/mnetlib/SynapseLib.h \
@@ -307,7 +307,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Registry.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/StringTokenizer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/SynapseLib.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/doubleMat.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

@@ -1,5 +1,5 @@
 /**
-*  doubleMat.h
+*  ublas::matrix<double>.h
 *  mnetlib
 *
 *  This file is part of mnetlib.
@@ -32,16 +32,16 @@
 namespace Mnetlib
 {
 
-  class doubleMat
+  class ublas::matrix<double>
   {
   public:
-    doubleMat();
-    doubleMat(const doubleMat& m);
-    doubleMat(int n, int m);
-    doubleMat(int n);
-    ~doubleMat();
+    ublas::matrix<double>();
+    ublas::matrix<double>(const ublas::matrix<double>& m);
+    ublas::matrix<double>(int n, int m);
+    ublas::matrix<double>(int n);
+    ~ublas::matrix<double>();
 
-    const doubleMat& operator=(const doubleMat& m);
+    const ublas::matrix<double>& operator=(const ublas::matrix<double>& m);
     double* getData(){return _data;};
 
     double& operator() (int row, int col);

@@ -27,7 +27,6 @@
 #define SYNAPSE_H
 
 #include "Exception.h"
-#include "doubleMat.h"
 #include <boost/numeric/ublas/vector.hpp>
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/shared_ptr.hpp>
@@ -64,9 +63,9 @@ namespace Mnetlib
 		
 		virtual double get_error(int i){throw new NotImplementedException("get_error");};
 		
-		virtual ublas::matrix<double> get_weight(){throw new NotImplementedException("get_weight");};
+		virtual ublas::matrix<double>& get_weight(){throw new NotImplementedException("get_weight");};
 		
-		virtual void set_weight(ublas::matrix<double> w){throw new NotImplementedException("set_weight");};
+		virtual void set_weight(ublas::matrix<double>& w){throw new NotImplementedException("set_weight");};
 		
 		virtual void set_index(int i){throw new NotImplementedException("set_index");};
 		
@@ -80,9 +79,9 @@ namespace Mnetlib
 		
 		virtual void adjuste_weight(double rate, int cicle, double momentum){throw new NotImplementedException("adjuste_weight");};
 		
-		virtual void set_pattern_input(doubleMat p){throw new NotImplementedException("");};
+		virtual void set_pattern_input(ublas::matrix<double>& p){throw new NotImplementedException("");};
 		
-		virtual void set_example(doubleMat ex){throw new NotImplementedException("set_example");};
+		virtual void set_example(ublas::matrix<double>& ex){throw new NotImplementedException("set_example");};
 		
 		virtual std::string toString(){throw new NotImplementedException("toString");};
 

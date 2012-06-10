@@ -23,9 +23,12 @@
 *
 */
 //TODO Aggiungere supporto mpi mp pthread
-#define DEBUG
+//#define DEBUG
 #include "Learner.h"
 #include "CommonMacro.h"
+#include <boost/numeric/ublas/matrix.hpp>
+
+using namespace boost::numeric::ublas;
 
 namespace Mnetlib{
 	
@@ -100,37 +103,32 @@ namespace Mnetlib{
           try{
               INFO_MSG("Starting net train");
               DEBUG_MSG("Setting pattern");
-              _Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,testNcO);
+              //_Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,testNcO);
               DEBUG_MSG("Setting net parameter");
               _Net->set_parameter(learning_rate,momentum,train_cicles);
               PatternSPtr aTestPattern(new Pattern()),aValidatePattern(new Pattern());
               for(int run=0;run<kValue; run++ )
                 {
+                  DEBUG_MSG("Building the data set");
                   this->buildKSequentialTrainPattern(trainPattern,kValue,run,aTestPattern,aValidatePattern);
+                  DEBUG_MSG("Setting parameter");
                   _Net->setPattern(aTestPattern->dataIn,aTestPattern->dataOut,aTestPattern->getLenght(),aTestPattern->getNout());
+                  DEBUG_MSG("Training the net");
                   _Net->trainNet();
-                                //test net
+                  //test net
+                  INFO_MSG("Setting test data set");
                   _Net->setPattern(aValidatePattern->dataIn,aValidatePattern->dataOut,aValidatePattern->getLenght(),aValidatePattern->getNout());
+                  INFO_MSG("Testing the net");
                   _Net->testNet();
-                                double ret=_Net->getGlobalError();
-                                double mse=_Net->getRMSE();
-                                //Salvo nella struttura dati l'errore globale della rete appena creata
-                                INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
-                                INFO_MSG("Testing Dataset: RMSE--> "<< mse);
+                  double ret=_Net->getGlobalError();
+                  double mse=_Net->getRMSE();
+                  //Salvo nella struttura dati l'errore globale della rete appena creata
+                  INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
+                  INFO_MSG("Testing Dataset: RMSE--> "<< mse);
                 }
-#if 0
-              _Net->trainNet();
-              //test net
-              _Net->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,trainNcO);
-              _Net->testNet();
-              double ret=_Net->getGlobalError();
-              double mse=_Net->getRMSE();
-              //Salvo nella struttura dati l'errore globale della rete appena creata
-              INFO_MSG("Testing Dataset: GLOBERR--> "<< ret);
-              INFO_MSG("Testing Dataset: RMSE--> "<< mse);
-#endif
           }
           catch (std::exception* e) { cout<< "Error occurred while training the net.\n" << e->what()<<"\n"; }
+          catch ( ... ) {cout << "kFoldTrainNet: Unknown exception while training the net\n";}
 
 	}
 
@@ -142,9 +140,13 @@ namespace Mnetlib{
 	      _Net->setPattern(trainPattern->dataIn,trainPattern->dataOut,trainLenght,trainNcO);
 	      DEBUG_MSG("Setting net parameter");
 	      _Net->set_parameter(learning_rate,momentum,train_cicles);
+              INFO_MSG("Training the net");
 	      _Net->trainNet();
 	      //test net
+	      INFO_MSG("Setting test data set");
+
 	      _Net->setPattern(testPattern->dataIn,testPattern->dataOut,testLenght,testNcO);
+              INFO_MSG("Testing the net");
 	      _Net->testNet();
 	      double ret=_Net->getGlobalError();
 	      double mse=_Net->getRMSE();
@@ -154,6 +156,12 @@ namespace Mnetlib{
 
 	  }
 	  catch (std::exception* e) { cout<< "Error occurred while training the net.\n" << e->what()<<"\n"; }
+	  catch (boost::exception* e)
+	      {
+	              //ERROR_MSG("Error during net train.\n" << e->what());
+	          std::cout << e;
+	      }
+	  catch ( ... ) {cout << "Unknown exception while training the net\n";}
 	}
 
 	int Learner::findBestNet()
@@ -275,21 +283,23 @@ namespace Mnetlib{
           int aGenericTestSetSize = (iPattern->getLenght()-aValidateTestSize)/(k-1);
           INFO_MSG("Generic set size:" << aGenericTestSetSize);
 
-          doubleMat aValidateDataIn=doubleMat(aValidateTestSize,iPattern->getNin());
-          doubleMat aValidateDataOut=doubleMat(aValidateTestSize,iPattern->getNout());
-          doubleMat aTestDataIn=doubleMat(aGenericTestSetSize*(k-1),iPattern->getNin());
-          doubleMat aTestDataOut=doubleMat(aGenericTestSetSize*(k-1),iPattern->getNout());
+          oValidatePattern->dataIn= matrix<double>(aValidateTestSize,iPattern->getNin());
+          oValidatePattern->dataOut= matrix<double>(aValidateTestSize,iPattern->getNout());
+          oTestPattern->dataIn= matrix<double>(aGenericTestSetSize*(k-1),iPattern->getNin());
+          oTestPattern->dataOut= matrix<double>(aGenericTestSetSize*(k-1),iPattern->getNout());
+
+
           int index=0;
           INFO_MSG("Building Test set. Current index: " << index);
           for(int i=0; i<aGenericTestSetSize*seq; i++)
             {
               for(int z=0; z<iPattern->getNin();z++)
                 {
-                  aTestDataIn(index,z)=iPattern->dataIn(index,z);
+                  oTestPattern->dataIn(i,z)=iPattern->dataIn(index,z);
                 }
               for(int l=0; l<iPattern->getNout();l++)
                 {
-                  aTestDataOut(index,l)=iPattern->dataOut(index,l);
+                  oTestPattern->dataOut(i,l)=iPattern->dataOut(index,l);
                 }
               index++;
             }
@@ -298,26 +308,42 @@ namespace Mnetlib{
             {
               for(int z=0; z<iPattern->getNin();z++)
                  {
-                  aValidateDataIn(i,z)=iPattern->dataIn(index,z);
+                  oValidatePattern->dataIn(i,z)=iPattern->dataIn(index,z);
                  }
                for(int l=0; l<iPattern->getNout();l++)
                  {
-                   aValidateDataOut(i,l)=iPattern->dataOut(index,l);
+                   oValidatePattern->dataOut(i,l)=iPattern->dataOut(index,l);
                  }
               //DEBUG_MSG("index: " << index);
               //DEBUG_MSG("In data: " << aValidateDataIn(i,1));
               //DEBUG_MSG("Out data: " << aValidateDataOut(i,1));
               index++;
             }
+
           INFO_MSG("Building Test set. Current index: " << index);
           for(int i=0; i<aGenericTestSetSize*(k-seq -1); i++)
             {
-              aTestDataIn(i)=iPattern->dataIn(index);
-              aTestDataOut(i)=iPattern->dataOut(index);
+              //aTestDataIn.
+              //aTestDataIn(i)=iPattern->dataIn(index);
+              //aTestDataOut(i)=iPattern->dataOut(index);
+              for(int z=0; z<iPattern->getNin();z++)
+                {
+                  oTestPattern->dataIn(i,z)=iPattern->dataIn(index,z);
+                }
+              for(int l=0; l<iPattern->getNout();l++)
+                {
+                  oTestPattern->dataOut(i,l)=iPattern->dataOut(index,l);
+                }
               index++;
+              //DEBUG_MSG("index: " << index);
+              //DEBUG_MSG("In data: " << aTestDataIn(i,1));
+              //DEBUG_MSG("Out data: " << aTestDataOut(i,1));
             }
-          oTestPattern->dataIn=aTestDataIn;
-          oTestPattern->dataOut=aTestDataOut;
+          //oTestPattern->dataIn=aTestDataIn;
+          //oTestPattern->dataOut=aTestDataOut;
+          DEBUG_MSG("Dataset: Train in" <<  oTestPattern->dataIn.size1() << " - " << oTestPattern->dataIn.size2());
+              DEBUG_MSG("Train Out " << oTestPattern->dataOut.size1() << " - " << oTestPattern->dataOut.size2() );
+
           }
                     catch (std::exception* e) { cout<< "Error occurred while training the net.\n" << e->what()<<"\n"; }
         }
